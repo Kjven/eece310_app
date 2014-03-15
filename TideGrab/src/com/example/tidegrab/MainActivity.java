@@ -75,11 +75,31 @@ public class MainActivity extends Activity {
             	Document doc = Jsoup.connect(url).get();
             	TextView txttitle = (TextView) findViewById(R.id.titletext);
             	
-            	for (Element table : doc.select("table")) {
+            	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
                     for (Element row : table.select("tr")) {
+                    	
+                    	//Grabbing the hours
+                    	if(row.hasClass("hourlyHeightsHeader2")){
+                    		Elements ths = row.select("th[scope=col]");
+                            if (ths.size() > 1) {
+                            	for( int i = 0; i < ths.size(); i++){
+                            		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
+                            		title += ths.get(i).text();
+                            		title += "  :  ";
+                            	}
+                            		title += "\n";
+                            }
+                    		
+                    	}
+                    	
                         Elements tds = row.select("td");
                         if (tds.size() > 1) {
-                            title += "\n" + (tds.get(0).text() + ":" + tds.get(1).text());
+                        	for( int i = 0; i < tds.size(); i++){
+                        		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
+                        		title += tds.get(i).text();
+                        		title += "  :  ";
+                        	}
+                        		title += "\n";
                         }
                     }
                 }
