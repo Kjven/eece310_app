@@ -1,12 +1,17 @@
 package com.example.tidegrab;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.view.Menu;
@@ -19,8 +24,11 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	
+	//Row elements
+	Elements rows;
+	
 	// URL Address
-    String url = "http://www.androidbegin.com";
+    String url = "http://www.waterlevels.gc.ca/eng/station?sid=7795";
     ProgressDialog mProgressDialog;
     
 	@Override
@@ -64,9 +72,18 @@ public class MainActivity extends Activity {
         protected Void doInBackground(Void... params) {
             try {
                 // Connect to the web site
-                Document document = Jsoup.connect(url).get();
-                // Get the html document title
-                title = document.title();
+            	Document doc = Jsoup.connect("http://espn.go.com/mens-college-basketball/conferences/standings/_/id/2/year/2012/acc-conference").get();
+            	TextView txttitle = (TextView) findViewById(R.id.titletext);
+                for (Element table : doc.select("table.tablehead")) {
+                    for (Element row : table.select("tr")) {
+                        Elements tds = row.select("td");
+                        if (tds.size() > 6) {
+                            title += "\n" + (tds.get(0).text() + ":" + tds.get(1).text());
+                        }
+                    }
+                }
+            	
+                
             } catch (IOException e) {
                 e.printStackTrace();
             }
