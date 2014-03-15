@@ -27,10 +27,20 @@
         android:id="@+id/titletext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/titlebutton"
-        android:layout_below="@+id/titlebutton"
-        android:layout_marginLeft="33dp"
-        android:layout_marginTop="80dp"
+        android:layout_alignBaseline="@+id/textView1"
+        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="54dp"
         android:text="TextView" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/titlebutton" >
+
+    </ListView>
 
 </RelativeLayout>

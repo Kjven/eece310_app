@@ -17,12 +17,15 @@ import android.app.ProgressDialog;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 
 
 public class MainActivity extends Activity {
+	
 	
 	//Row elements
 	Elements rows;
@@ -30,6 +33,12 @@ public class MainActivity extends Activity {
 	// URL Address
     String url = "http://www.waterlevels.gc.ca/eng/station?sid=7795";
     ProgressDialog mProgressDialog;
+    
+    //List for scraped data storage
+    ArrayList<String> tideTuples = new ArrayList<String>();
+    
+    //ListView to display scraped data
+    private ListView listview;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,11 +82,10 @@ public class MainActivity extends Activity {
             try {
                 // Connect to the web site
             	Document doc = Jsoup.connect(url).get();
-            	TextView txttitle = (TextView) findViewById(R.id.titletext);
             	
             	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
                     for (Element row : table.select("tr")) {
-                    	
+                    	title = "";
                     	//Grabbing the hours
                     	if(row.hasClass("hourlyHeightsHeader2")){
                     		Elements ths = row.select("th[scope=col]");
@@ -92,17 +100,21 @@ public class MainActivity extends Activity {
                     		
                     	}
                     	
+                    	//Grabbing the heights
                         Elements tds = row.select("td");
                         if (tds.size() > 1) {
                         	for( int i = 0; i < tds.size(); i++){
                         		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
                         		title += tds.get(i).text();
                         		title += "  :  ";
+                        		
                         	}
+                        		tideTuples.add(title);
                         		title += "\n";
                         }
                     }
                 }
+            	
             	
                 
             } catch (IOException e) {
@@ -116,6 +128,9 @@ public class MainActivity extends Activity {
             // Set title into TextView
             TextView txttitle = (TextView) findViewById(R.id.titletext);
             txttitle.setText(title);
+            listview = (ListView) findViewById(R.id.listView1);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, tideTuples);
+            listview.setAdapter(adapter);
             mProgressDialog.dismiss();
         }
     }
