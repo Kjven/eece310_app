@@ -72,12 +72,13 @@ public class MainActivity extends Activity {
         protected Void doInBackground(Void... params) {
             try {
                 // Connect to the web site
-            	Document doc = Jsoup.connect("http://espn.go.com/mens-college-basketball/conferences/standings/_/id/2/year/2012/acc-conference").get();
+            	Document doc = Jsoup.connect(url).get();
             	TextView txttitle = (TextView) findViewById(R.id.titletext);
-                for (Element table : doc.select("table.tablehead")) {
+            	
+            	for (Element table : doc.select("table")) {
                     for (Element row : table.select("tr")) {
                         Elements tds = row.select("td");
-                        if (tds.size() > 6) {
+                        if (tds.size() > 1) {
                             title += "\n" + (tds.get(0).text() + ":" + tds.get(1).text());
                         }
                     }
