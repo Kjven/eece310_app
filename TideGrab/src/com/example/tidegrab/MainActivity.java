@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
 	Elements rows;
 	
 	// URL Address
-    String url = "http://www.waterlevels.gc.ca/eng/station?sid=7795";
+    String url = "";
     ProgressDialog mProgressDialog;
     
     //List for scraped data storage
@@ -51,6 +51,9 @@ public class MainActivity extends Activity {
         titlebutton.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
                 // Execute Title AsyncTask
+            	TextView sidInput = (TextView)findViewById(R.id.sidInput);
+            	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + sidInput.getText().toString();
+            	tideTuples.clear();
                 new Title().execute();
             }
         });
@@ -104,8 +107,8 @@ public class MainActivity extends Activity {
                         Elements tds = row.select("td");
                         if (tds.size() > 1) {
                         	for( int i = 0; i < tds.size(); i++){
-                        		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
-                        		title += Integer.toString(i);
+                        		
+                        		title += Integer.toString(i); //Outputting the associated hour as well
                         		title += ": " + tds.get(i).text();
                         		title += "  ,  ";
                         		
@@ -127,8 +130,9 @@ public class MainActivity extends Activity {
         @Override
         protected void onPostExecute(Void result) {
             // Set title into TextView
-            TextView txttitle = (TextView) findViewById(R.id.titletext);
-            txttitle.setText(title);
+            //TextView txttitle = (TextView) findViewById(R.id.titletext);
+            //txttitle.setText(title);
+        	
             listview = (ListView) findViewById(R.id.listView1);
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, tideTuples);
             listview.setAdapter(adapter);
