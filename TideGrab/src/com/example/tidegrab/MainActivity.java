@@ -105,8 +105,9 @@ public class MainActivity extends Activity {
                         if (tds.size() > 1) {
                         	for( int i = 0; i < tds.size(); i++){
                         		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
-                        		title += tds.get(i).text();
-                        		title += "  :  ";
+                        		title += Integer.toString(i);
+                        		title += ": " + tds.get(i).text();
+                        		title += "  ,  ";
                         		
                         	}
                         		tideTuples.add(title);
