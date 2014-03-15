@@ -20,12 +20,15 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 
 
 public class MainActivity extends Activity {
 	
+	//Spinner
+	Spinner spinner;
 	
 	//Row elements
 	Elements rows;
@@ -47,6 +50,14 @@ public class MainActivity extends Activity {
 		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
 		
+		//Setting up the Spinner
+		spinner = (Spinner) findViewById(R.id.spinner1);
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+		        R.array.stations_array, android.R.layout.simple_spinner_item);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+
+		
 		// Capture button click
         titlebutton.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
@@ -54,7 +65,7 @@ public class MainActivity extends Activity {
             	TextView sidInput = (TextView)findViewById(R.id.sidInput);
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + sidInput.getText().toString();
             	tideTuples.clear();
-                new Title().execute();
+                new TideInfo().execute();
             }
         });
 	}
@@ -67,14 +78,14 @@ public class MainActivity extends Activity {
 	}
 
 	 // Title AsyncTask
-    private class Title extends AsyncTask<Void, Void, Void> {
+    private class TideInfo extends AsyncTask<Void, Void, Void> {
         String title;
  
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mProgressDialog = new ProgressDialog(MainActivity.this);
-            mProgressDialog.setTitle("Android Basic JSoup Tutorial");
+            mProgressDialog.setTitle("Retreiving Tide Information");
             mProgressDialog.setMessage("Loading...");
             mProgressDialog.setIndeterminate(false);
             mProgressDialog.show();
