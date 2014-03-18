@@ -8,17 +8,25 @@ import org.jsoup.Jsoup;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewSeries;
+import com.jjoe64.graphview.LineGraphView;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -47,6 +55,26 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// first init data
+		// sin curve
+		int num = 150;
+		GraphViewData[] data = new GraphViewData[num];
+		double v=0;
+		for (int i=0; i<num; i++) {
+		   v += 0.2;
+		   data[i] = new GraphViewData(i, Math.sin(v));
+		}
+		GraphViewSeries seriesSin = new GraphViewSeries("Sinus curve", null, data);
+         
+        GraphView graphView = new LineGraphView(
+              this // context
+              , "Tide Hights" // heading
+        );
+        graphView.addSeries(seriesSin); // data
+         
+        LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
+        layout.addView(graphView);
 		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
 		

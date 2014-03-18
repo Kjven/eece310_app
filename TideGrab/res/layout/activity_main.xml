@@ -18,8 +18,7 @@
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="100dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/titlebutton" >
 
@@ -45,6 +44,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/graph1"
+        android:layout_width="fill_parent"
+        android:layout_height="250dip"
+        android:layout_alignLeft="@+id/listView1"
+        android:layout_below="@+id/listView1"
+        android:gravity="bottom"
+        android:orientation="vertical" >
     </LinearLayout>
 
 </RelativeLayout>
