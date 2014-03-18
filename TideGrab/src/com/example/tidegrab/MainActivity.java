@@ -76,7 +76,7 @@ public class MainActivity extends Activity {
             	TextView sidInput = (TextView)findViewById(R.id.sidInput);
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + sidInput.getText().toString();
             	tideTuples.clear();
-                new TideInfo().execute();
+                new TideInfo().execute(url);
             }
         });
 	}
@@ -111,9 +111,21 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	private void updateTideGraph(GraphViewSeries series){
+		//Update the graph
+        GraphView graph = (GraphView) ((LinearLayout) findViewById(R.id.graph1)).getChildAt(0);
+        graph.removeAllSeries();
+        graph.addSeries(series);
+        
+        //GraphViewData[] data = new GraphViewData[tideData.size()];
+        //data = tideData.toArray(data);
+        //graph.addSeries(new GraphViewSeries("Tide Data", null, data));
+        //graph.setViewPort(0, 23);
+	}
 
 	 // Title AsyncTask
-    private class TideInfo extends AsyncTask<Void, Void, Void> {
+    private class TideInfo extends AsyncTask<String, Void, GraphViewSeries> {
         String title;
  
         @Override
@@ -127,7 +139,7 @@ public class MainActivity extends Activity {
         }
  
         @Override
-        protected Void doInBackground(Void... params) {
+        protected GraphViewSeries doInBackground(String... params) {
             try {
                 // Connect to the web site
             	Document doc = Jsoup.connect(url).get();
@@ -179,23 +191,7 @@ public class MainActivity extends Activity {
         }
  
         @Override
-        protected void onPostExecute(Void result) {
-            // Set title into TextView
-            //TextView txttitle = (TextView) findViewById(R.id.titletext);
-            //txttitle.setText(title);
-        	
-            //listview = (ListView) findViewById(R.id.listView1);
-            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, tideTuples);
-            //listview.setAdapter(adapter);
-            
-            //Update the graph
-            GraphView graph = (GraphView) ((LinearLayout) findViewById(R.id.graph1)).getChildAt(0);
-            graph.removeAllSeries();
-            GraphViewData[] data = new GraphViewData[tideData.size()];
-            data = tideData.toArray(data);
-            graph.addSeries(new GraphViewSeries("Tide Data", null, data));
-            graph.setViewPort(0, 23);
-            
+        protected void onPostExecute(GraphViewSeries result) {
             mProgressDialog.dismiss();
         }
     }
