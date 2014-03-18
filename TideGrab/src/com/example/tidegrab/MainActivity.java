@@ -47,6 +47,7 @@ public class MainActivity extends Activity {
     
     //List for scraped data storage
     ArrayList<String> tideTuples = new ArrayList<String>();
+    ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
     
     //ListView to display scraped data
     private ListView listview;
@@ -55,26 +56,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-		// first init data
-		// sin curve
-		int num = 150;
-		GraphViewData[] data = new GraphViewData[num];
-		double v=0;
-		for (int i=0; i<num; i++) {
-		   v += 0.2;
-		   data[i] = new GraphViewData(i, Math.sin(v));
-		}
-		GraphViewSeries seriesSin = new GraphViewSeries("Sinus curve", null, data);
          
-        GraphView graphView = new LineGraphView(
-              this // context
-              , "Tide Hights" // heading
-        );
-        graphView.addSeries(seriesSin); // data
-         
-        LinearLayout layout = (LinearLayout) findViewById(R.id.graph1);
-        layout.addView(graphView);
+        ((LinearLayout) findViewById(R.id.graph1)).addView(createGraphView("Tide Heights"));
 		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
 		
@@ -96,6 +79,30 @@ public class MainActivity extends Activity {
                 new TideInfo().execute();
             }
         });
+	}
+	
+	//Creates an example sine series displayed on the provided graph.
+	private void createExampleSineSeries(GraphView graph){
+		// sin curve
+		int num = 150;
+		GraphViewData[] data = new GraphViewData[num];
+		double v=0;
+		for (int i=0; i<num; i++) {
+		   v += 0.2;
+		   data[i] = new GraphViewData(i, Math.sin(v));
+		}
+		GraphViewSeries seriesSin = new GraphViewSeries("Sine Curve", null, data);
+		graph.addSeries(seriesSin);
+
+        graph.setViewPort(25, 25);
+        graph.setScrollable(true);
+        graph.setScalable(true);
+	}
+	
+	private GraphView createGraphView(String title){
+		    GraphView graphView = new LineGraphView(this, "Tide Hights");
+	        createExampleSineSeries(graphView);
+	        return graphView;
 	}
 
 	@Override
@@ -124,6 +131,7 @@ public class MainActivity extends Activity {
             try {
                 // Connect to the web site
             	Document doc = Jsoup.connect(url).get();
+            	int hour = 0;
             	
             	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
                     for (Element row : table.select("tr")) {
@@ -147,10 +155,14 @@ public class MainActivity extends Activity {
                         if (tds.size() > 1) {
                         	for( int i = 0; i < tds.size(); i++){
                         		
+                        		String text = tds.get(i).text();
+                        		
                         		title += Integer.toString(i); //Outputting the associated hour as well
-                        		title += ": " + tds.get(i).text();
+                        		title += ": " + text;
                         		title += "  ,  ";
                         		
+                        		//need a unimodally increasing hour.
+                        		tideData.add(new GraphViewData(hour++, Float.parseFloat(text)));
                         	}
                         		tideTuples.add(title);
                         		title += "\n";
@@ -172,9 +184,18 @@ public class MainActivity extends Activity {
             //TextView txttitle = (TextView) findViewById(R.id.titletext);
             //txttitle.setText(title);
         	
-            listview = (ListView) findViewById(R.id.listView1);
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, tideTuples);
-            listview.setAdapter(adapter);
+            //listview = (ListView) findViewById(R.id.listView1);
+            //ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, tideTuples);
+            //listview.setAdapter(adapter);
+            
+            //Update the graph
+            GraphView graph = (GraphView) ((LinearLayout) findViewById(R.id.graph1)).getChildAt(0);
+            graph.removeAllSeries();
+            GraphViewData[] data = new GraphViewData[tideData.size()];
+            data = tideData.toArray(data);
+            graph.addSeries(new GraphViewSeries("Tide Data", null, data));
+            graph.setViewPort(0, 23);
+            
             mProgressDialog.dismiss();
         }
     }
