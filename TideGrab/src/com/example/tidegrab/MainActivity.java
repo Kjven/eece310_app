@@ -35,15 +35,10 @@ import android.widget.TextView;
 
 public class MainActivity extends superActivity {
 	
-	//Spinner
 	Spinner spinner;
-	
-	
 	Scraper tideScrape;
-    
-    
-    
-    
+	GraphView graph;
+       
     //ListView to display scraped data
     private ListView listview;
     
@@ -52,7 +47,8 @@ public class MainActivity extends superActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
          
-        ((LinearLayout) findViewById(R.id.graph1)).addView(createGraphView("Tide Heights"));
+       graph = createGraphView("Tide Heights");
+        ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
 		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
 		
@@ -77,6 +73,8 @@ public class MainActivity extends superActivity {
         });
       //Set the current Activity
         setActivity(this);
+      //Set the current GraphView
+        setGraph(graph);
       
 	}
 	
@@ -113,7 +111,7 @@ public class MainActivity extends superActivity {
 	
 	private void updateTideGraph(GraphViewSeries series){
 		//Update the graph
-        GraphView graph = (GraphView) ((LinearLayout) findViewById(R.id.graph1)).getChildAt(0);
+        graph = (GraphView) ((LinearLayout) findViewById(R.id.graph1)).getChildAt(0);
         graph.removeAllSeries();
         graph.addSeries(series);
         

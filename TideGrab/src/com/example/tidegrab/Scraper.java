@@ -12,30 +12,56 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
+import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 
 public class Scraper {
+	
 	private String url;
 	private ProgressDialog mProgressDialog;
 	private TideApplication tideApp;
-	
+	private GraphView graph;
+	private GraphViewSeries series;
 	
 	//List for scraped data storage
     ArrayList<String> tideTuples;
     ArrayList<GraphViewData> tideData;
 	
-	 TideInfo tideInfo;
+	TideInfo tideInfo;
 	
-	 public Scraper(TideApplication tideApplication){
+	public Scraper(TideApplication tideApplication){
 		 tideInfo = new TideInfo();
 		 tideTuples = new ArrayList<String>();
 		 tideData = new ArrayList<GraphViewData>();
 		 this.tideApp = tideApplication;
-	 }
+	}
 	
-    class TideInfo extends AsyncTask<String, Void, GraphViewSeries> {
-        String title;
+	public void updateTideGraph(){
+		this.graph = tideApp.getGraph();
+		//runnable on ui
+		tideApp.getActivity().runOnUiThread(new Runnable() {
+		    public void run() {
+		    	graph.removeAllSeries();
+				series = createSeries();
+		        graph.addSeries(series);
+		        graph.setViewPort(25, 25);
+		        graph.setScrollable(true);
+		        graph.setScalable(true);
+		    }
+		});
+		
+	}
+	
+	GraphViewSeries createSeries(){
+		
+		 
+		return new GraphViewSeries("Tide Heights", null, (GraphViewDataInterface[]) tideData.toArray());
+	}
+	
+    class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
+        String info;
     	Elements rows;
 
         @Override
@@ -60,48 +86,45 @@ public class Scraper {
                 // Connect to the web site
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
             	Document doc = Jsoup.connect(url).get();
-            	int hour = 0;
             	
             	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
                     for (Element row : table.select("tr")) {
-                    	title = "";
+                    	info = "";
                     	//Grabbing the hours
                     	if(row.hasClass("hourlyHeightsHeader2")){
                     		Elements ths = row.select("th[scope=col]");
                             if (ths.size() > 1) {
                             	for( int i = 0; i < ths.size(); i++){
                             		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
-                            		title += ths.get(i).text();
-                            		title += "  :  ";
+                            		info += ths.get(i).text();
+                            		info += "  :  ";
                             	}
-                            		title += "\n";
-                            }
-                    		
+                            		info += "\n";
+                            }	
                     	}
                     	
                     	//Grabbing the heights
                         Elements tds = row.select("td");
-                        if (tds.size() > 1) {
-                        	for( int i = 0; i < tds.size(); i++){
+                        if(tds.size() > 1){
+                        	for( int hour = 0; hour < tds.size(); hour++){
                         		
-                        		String text = tds.get(i).text();
+                        		String text = tds.get(hour).text();
                         		
-                        		title += Integer.toString(i); //Outputting the associated hour as well
-                        		title += ": " + text;
-                        		title += "  ,  ";
+                        		info += Integer.toString(hour); //Outputting the associated hour as well
+                        		info += ": " + text;
+                        		info += "  ,  ";
                         		
                         		//need a unimodally increasing hour.
-                        		tideData.add(new GraphViewData(hour++, Float.parseFloat(text)));
+                        		tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
+                        		
                         	}
-                        		tideTuples.add(title);
-                        		Log.d("Scraped", title);
-                        		title += "\n";
+                        		tideTuples.add(info);
+                        		Log.d("Scraped", info);
+                        		info += "\n";
                         }
                     }
                 }
             	
-            	
-                
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -111,6 +134,9 @@ public class Scraper {
         @Override
         protected void onPostExecute(GraphViewSeries result) {
             mProgressDialog.dismiss();
+            updateTideGraph();
         }
     }
+    
+    
 }
