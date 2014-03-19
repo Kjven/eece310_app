@@ -14,7 +14,6 @@ import android.util.Log;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 
 public class Scraper {
@@ -38,9 +37,10 @@ public class Scraper {
 		 this.tideApp = tideApplication;
 	}
 	
+	//Updates the GraphView of the Activity currently running
 	public void updateTideGraph(){
 		this.graph = tideApp.getGraph();
-		//runnable on ui
+
 		tideApp.getActivity().runOnUiThread(new Runnable() {
 		    public void run() {
 		    	graph.removeAllSeries();
@@ -50,16 +50,15 @@ public class Scraper {
 		        graph.setScrollable(true);
 		        graph.setScalable(true);
 		    }
-		});
-		
+		});		
 	}
 	
-	GraphViewSeries createSeries(){
-		
-		 
+	//Converts the list of GraphViewData objects into a single GraphViewSeries object
+	GraphViewSeries createSeries(){ 
 		return new GraphViewSeries("Tide Heights", null, tideData.toArray(new GraphViewData[tideData.size()]));
 	}
 	
+	//Handles the extraction of data from the internet. Invokes methods to update the Graph View.
     class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
         String info;
     	Elements rows;
@@ -90,19 +89,7 @@ public class Scraper {
             	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
                     for (Element row : table.select("tr")) {
                     	info = "";
-                    	//Grabbing the hours
-                    	if(row.hasClass("hourlyHeightsHeader2")){
-                    		Elements ths = row.select("th[scope=col]");
-                            if (ths.size() > 1) {
-                            	for( int i = 0; i < ths.size(); i++){
-                            		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
-                            		info += ths.get(i).text();
-                            		info += "  :  ";
-                            	}
-                            		info += "\n";
-                            }	
-                    	}
-                    	
+                                    	
                     	//Grabbing the heights
                         Elements tds = row.select("td");
                         if(tds.size() > 1){
@@ -137,6 +124,5 @@ public class Scraper {
             updateTideGraph();
         }
     }
-    
-    
+       
 }
