@@ -57,7 +57,7 @@ public class Scraper {
 	GraphViewSeries createSeries(){
 		
 		 
-		return new GraphViewSeries("Tide Heights", null, (GraphViewDataInterface[]) tideData.toArray());
+		return new GraphViewSeries("Tide Heights", null, tideData.toArray(new GraphViewData[tideData.size()]));
 	}
 	
     class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
