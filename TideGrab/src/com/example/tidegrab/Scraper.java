@@ -79,7 +79,9 @@ public class Scraper {
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
             	Document doc = Jsoup.connect(url).get();
-            	GraphViewData[] tideHeights = extractTideHeight(doc);     
+            	Log.d("Gbug", "Going to extract heights");
+            	GraphViewData[] tideHeights = extractTideHeight(doc)[0];   
+            	Log.d("Gbug", "Tide Heights extracted");
             	String graphTitle = extractStationName(doc);
             	result = new GraphViewSeries(graphTitle, null, tideHeights);
             } catch (IOException e) {
@@ -95,9 +97,12 @@ public class Scraper {
         }
         
         //Extracts Height data from an HTML document. Returns a graph view series.
-        public GraphViewData[] extractTideHeight(Document doc){
+        public GraphViewData[][] extractTideHeight(Document doc){
+        	Log.d("Gbug", "Entered extractTideHeight");
         	int iteration = 0;
         	int rownum = 0;
+        	
+        	ArrayList<GraphViewData[]> tideDataList = new ArrayList<GraphViewData[]>();
         	ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
         	
         	Elements tds = null;
@@ -121,13 +126,16 @@ public class Scraper {
                     		info += "  ,  ";
                     		
                     		//Currently Only Graphing Data for the first available date
-                    		if(iteration == 0){
+                    		//if(iteration == 0){
                     			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
-                    		}	
+                    		//}	
                     	}
                     		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
                     		Log.d("Scraped", info);
                     		info += "\n";
+                    	Log.d("Gbug", "Entering tideDataList element");
+                    	tideDataList.add(tideData.toArray(new GraphViewData[tideData.size()]));
+                    	tideData.clear();
                     	iteration++;
                     }
                     rownum++;  
@@ -135,7 +143,8 @@ public class Scraper {
         	}
         	
         	//Convert to graph view series and return
-        	return tideData.toArray(new GraphViewData[tideData.size()]);
+        	Log.d("Gbug", "Returning tideDataList");
+        	return tideDataList.toArray(new GraphViewData[tideDataList.size()][]);
         }
         
         private String extractStationName(Document doc) {
