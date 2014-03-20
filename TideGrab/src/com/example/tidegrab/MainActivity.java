@@ -1,63 +1,33 @@
 package com.example.tidegrab;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jsoup.Jsoup;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 
-
-public class MainActivity extends Activity {
-	
-	//Spinner
+public class MainActivity extends superActivity {
+		
 	Spinner spinner;
-	
-	//Row elements
-	Elements rows;
-	
-	// URL Address
-    String url = "";
-    ProgressDialog mProgressDialog;
-    
-    //List for scraped data storage
-    ArrayList<String> tideTuples = new ArrayList<String>();
-    ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
-    
-    //ListView to display scraped data
-    private ListView listview;
-    
+	Scraper tideScrape;
+	GraphView graph;
+          
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
          
-        ((LinearLayout) findViewById(R.id.graph1)).addView(createGraphView("Tide Heights"));
+        graph = createGraphView("Tide Heights");
+        ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
 		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
 		
@@ -72,13 +42,17 @@ public class MainActivity extends Activity {
 		// Capture button click
         titlebutton.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
-                // Execute Title AsyncTask
             	TextView sidInput = (TextView)findViewById(R.id.sidInput);
-            	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + sidInput.getText().toString();
-            	tideTuples.clear();
-                new TideInfo().execute(url);
+            	String sid = sidInput.getText().toString();
+            	
+            	tideScrape = new Scraper(tideApp);
+                tideScrape.tideInfo.execute(sid);
             }
         });
+        //Set the current Activity and GraphView in the TideApplication 
+        setActivity(this);
+        setGraph(graph);
+      
 	}
 	
 	//Creates an example sine series displayed on the provided graph.
@@ -100,7 +74,7 @@ public class MainActivity extends Activity {
 	}
 	
 	private GraphView createGraphView(String title){
-		    GraphView graphView = new LineGraphView(this, "Tide Hights");
+		    GraphView graphView = new LineGraphView(this, "Tide Heights");
 	        createExampleSineSeries(graphView);
 	        return graphView;
 	}
@@ -111,88 +85,6 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+		 
 	
-	private void updateTideGraph(GraphViewSeries series){
-		//Update the graph
-        GraphView graph = (GraphView) ((LinearLayout) findViewById(R.id.graph1)).getChildAt(0);
-        graph.removeAllSeries();
-        graph.addSeries(series);
-        
-        //GraphViewData[] data = new GraphViewData[tideData.size()];
-        //data = tideData.toArray(data);
-        //graph.addSeries(new GraphViewSeries("Tide Data", null, data));
-        //graph.setViewPort(0, 23);
-	}
-
-	 // Title AsyncTask
-    private class TideInfo extends AsyncTask<String, Void, GraphViewSeries> {
-        String title;
- 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            mProgressDialog = new ProgressDialog(MainActivity.this);
-            mProgressDialog.setTitle("Retreiving Tide Information");
-            mProgressDialog.setMessage("Loading...");
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.show();
-        }
- 
-        @Override
-        protected GraphViewSeries doInBackground(String... params) {
-            try {
-                // Connect to the web site
-            	Document doc = Jsoup.connect(url).get();
-            	int hour = 0;
-            	
-            	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
-                    for (Element row : table.select("tr")) {
-                    	title = "";
-                    	//Grabbing the hours
-                    	if(row.hasClass("hourlyHeightsHeader2")){
-                    		Elements ths = row.select("th[scope=col]");
-                            if (ths.size() > 1) {
-                            	for( int i = 0; i < ths.size(); i++){
-                            		//title += "\n" + (tds.get(0).text() + "    :    " + tds.get(1).text());
-                            		title += ths.get(i).text();
-                            		title += "  :  ";
-                            	}
-                            		title += "\n";
-                            }
-                    		
-                    	}
-                    	
-                    	//Grabbing the heights
-                        Elements tds = row.select("td");
-                        if (tds.size() > 1) {
-                        	for( int i = 0; i < tds.size(); i++){
-                        		
-                        		String text = tds.get(i).text();
-                        		
-                        		title += Integer.toString(i); //Outputting the associated hour as well
-                        		title += ": " + text;
-                        		title += "  ,  ";
-                        		
-                        		//need a unimodally increasing hour.
-                        		tideData.add(new GraphViewData(hour++, Float.parseFloat(text)));
-                        	}
-                        		tideTuples.add(title);
-                        		title += "\n";
-                        }
-                    }
-                }
-            	
-            	
-                
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
- 
-        @Override
-        protected void onPostExecute(GraphViewSeries result) {
-            mProgressDialog.dismiss();
-        }
-    }
 }
