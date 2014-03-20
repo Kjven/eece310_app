@@ -26,10 +26,6 @@ public class Scraper {
 	private ProgressDialog mProgressDialog;
 	private TideApplication tideApp;
 	private GraphView graph;
-	private GraphViewSeries series;
-	
-	//List for scraped data storage
-    ArrayList<GraphViewData> tideData;
 	
 	TideInfo tideInfo;
 	
@@ -40,7 +36,6 @@ public class Scraper {
 	
 	public Scraper(TideApplication tideApplication){
 		 tideInfo = new TideInfo();
-		 tideData = new ArrayList<GraphViewData>();
 		 this.tideApp = tideApplication;
 	}
 	
@@ -49,25 +44,16 @@ public class Scraper {
 	}
 	
 	//Updates the GraphView of the Activity currently running
-	public void updateTideGraph(){
+	public void updateTideGraph(final GraphViewSeries series){
 		this.graph = tideApp.getGraph();
 
 		tideApp.getActivity().runOnUiThread(new Runnable() {
 		    public void run() {
-		    	graph.removeAllSeries();
-				series = createSeries();
-		        graph.addSeries(series);
-		        graph.setViewPort(25, 25);
-		        graph.setScrollable(true);
-		        graph.setScalable(true);
+		    	((TideGraphView) graph).UpdateGraph(series);
 		    }
 		});		
 	}
 	
-	//Converts the list of GraphViewData objects into a single GraphViewSeries object
-	GraphViewSeries createSeries(){ 
-		return new GraphViewSeries("Tide Heights", null, tideData.toArray(new GraphViewData[tideData.size()]));
-	}
 	
 	//Handles the extraction of data from the internet. Invokes methods to update the Graph View.
     public class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
@@ -88,29 +74,31 @@ public class Scraper {
         
         @Override
         protected GraphViewSeries doInBackground(String... params) {
+        	GraphViewSeries result = null;
             try {
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
             	Document doc = Jsoup.connect(url).get();
-            	tideData.clear();
-            	extractHeight(doc);           	
-            	
+            	GraphViewData[] tideHeights = extractTideHeight(doc);     
+            	String graphTitle = extractStationName(doc);
+            	result = new GraphViewSeries(graphTitle, null, tideHeights);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return result;
         }
- 
-        @Override
+
+		@Override
         protected void onPostExecute(GraphViewSeries result) {
             mProgressDialog.dismiss();
-            updateTideGraph();
+            updateTideGraph(result);
         }
         
-        //Extracts Height data from an HTML document. Stores the data into tideData
-        public String extractHeight(Document doc){
+        //Extracts Height data from an HTML document. Returns a graph view series.
+        public GraphViewData[] extractTideHeight(Document doc){
         	int iteration = 0;
         	int rownum = 0;
+        	ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
         	
         	Elements tds = null;
         	
@@ -145,9 +133,14 @@ public class Scraper {
                     rownum++;  
                 }	
         	}
-        	//Returned for testing purposes
-        	return info;
+        	
+        	//Convert to graph view series and return
+        	return tideData.toArray(new GraphViewData[tideData.size()]);
         }
-    }
-       
+        
+        private String extractStationName(Document doc) {
+	        // TODO IMPLEMENT THIS
+	        return "EXAMPLE TIDE STATION";
+        }
+    } 
 }
