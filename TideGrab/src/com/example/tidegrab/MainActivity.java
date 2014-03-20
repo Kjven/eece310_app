@@ -1,33 +1,16 @@
 package com.example.tidegrab;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jsoup.Jsoup;
-
-import android.os.AsyncTask;
 import android.os.Bundle;
-
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
-
-import android.app.Activity;
-import android.app.ProgressDialog;
-import android.graphics.Color;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -38,16 +21,13 @@ public class MainActivity extends superActivity {
 	Spinner spinner;
 	Scraper tideScrape;
 	GraphView graph;
-       
-    //ListView to display scraped data
-    private ListView listview;
-    
+          
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
          
-       graph = createGraphView("Tide Heights");
+        graph = createGraphView("Tide Heights");
         ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
 		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
@@ -63,7 +43,6 @@ public class MainActivity extends superActivity {
 		// Capture button click
         titlebutton.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
-                // Execute Title AsyncTask
             	TextView sidInput = (TextView)findViewById(R.id.sidInput);
             	String sid = sidInput.getText().toString();
             	
@@ -71,9 +50,8 @@ public class MainActivity extends superActivity {
                 tideScrape.tideInfo.execute(sid);
             }
         });
-      //Set the current Activity
+        //Set the current Activity and GraphView in the TideApplication 
         setActivity(this);
-      //Set the current GraphView
         setGraph(graph);
       
 	}
@@ -108,18 +86,5 @@ public class MainActivity extends superActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
-	private void updateTideGraph(GraphViewSeries series){
-		//Update the graph
-        graph = (GraphView) ((LinearLayout) findViewById(R.id.graph1)).getChildAt(0);
-        graph.removeAllSeries();
-        graph.addSeries(series);
-        
-        //GraphViewData[] data = new GraphViewData[tideData.size()];
-        //data = tideData.toArray(data);
-        //graph.addSeries(new GraphViewSeries("Tide Data", null, data));
-        //graph.setViewPort(0, 23);
-	}
-
-	 
+		 
 }
