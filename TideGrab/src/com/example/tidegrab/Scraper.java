@@ -25,14 +25,12 @@ public class Scraper {
 	private GraphViewSeries series;
 	
 	//List for scraped data storage
-    ArrayList<String> tideTuples;
     ArrayList<GraphViewData> tideData;
 	
 	TideInfo tideInfo;
 	
 	public Scraper(TideApplication tideApplication){
 		 tideInfo = new TideInfo();
-		 tideTuples = new ArrayList<String>();
 		 tideData = new ArrayList<GraphViewData>();
 		 this.tideApp = tideApplication;
 	}
@@ -66,9 +64,6 @@ public class Scraper {
         @Override
         protected void onPreExecute() {
         	Log.d("Gbug", "AsyncTask called");
-        	Log.d("Gbug", "Got applicationContext");
-        	tideTuples.clear();
-        	Log.d("Gbug", "Cleared tide tuples");
         	super.onPreExecute();
             mProgressDialog = new ProgressDialog(tideApp.getActivity());
             mProgressDialog.setTitle("Retreiving Tide Information");
@@ -80,11 +75,13 @@ public class Scraper {
  
         @Override
         protected GraphViewSeries doInBackground(String... params) {
+        	int iteration = 0;
             try {
             	Log.d("Gbug", "GraphView doInBackground started");
                 // Connect to the web site
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
             	Document doc = Jsoup.connect(url).get();
+            	tideData.clear();
             	
             	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
                     for (Element row : table.select("tr")) {
@@ -101,14 +98,15 @@ public class Scraper {
                         		info += ": " + text;
                         		info += "  ,  ";
                         		
-                        		//need a unimodally increasing hour.
-                        		tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
+                        		//Currently Only Graphing Data for the first available date
+                        		if(iteration == 0)
+                        			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
                         		
                         	}
-                        		tideTuples.add(info);
                         		Log.d("Scraped", info);
                         		info += "\n";
                         }
+                        iteration++;
                     }
                 }
             	
