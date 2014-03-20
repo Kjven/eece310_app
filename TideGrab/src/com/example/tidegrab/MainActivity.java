@@ -26,7 +26,8 @@ public class MainActivity extends superActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
          
-        graph = createGraphView("Tide Heights");
+		//Create the graph
+        graph = new TideGraphView(this, "Tide Heights");
         ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
 		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
@@ -47,6 +48,7 @@ public class MainActivity extends superActivity {
             	
             	tideScrape = new Scraper(tideApp);
                 tideScrape.tideInfo.execute(sid);
+                
             }
         });
         //Set the current Activity and GraphView in the TideApplication 
@@ -66,17 +68,12 @@ public class MainActivity extends superActivity {
 		   data[i] = new GraphViewData(i, Math.sin(v));
 		}
 		GraphViewSeries seriesSin = new GraphViewSeries("Sine Curve", null, data);
+		graph.removeAllSeries();
 		graph.addSeries(seriesSin);
 
         graph.setViewPort(25, 25);
         graph.setScrollable(true);
         graph.setScalable(true);
-	}
-	
-	private GraphView createGraphView(String title){
-		    GraphView graphView = new LineGraphView(this, "Tide Heights");
-	        createExampleSineSeries(graphView);
-	        return graphView;
 	}
 
 	@Override
