@@ -15,9 +15,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
-
 public class MainActivity extends superActivity {
-	
+		
 	Spinner spinner;
 	Scraper tideScrape;
 	GraphView graph;
@@ -87,4 +86,5 @@ public class MainActivity extends superActivity {
 		return true;
 	}
 		 
+	
 }

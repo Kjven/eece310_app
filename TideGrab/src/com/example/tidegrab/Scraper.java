@@ -1,3 +1,6 @@
+/**
+ * @author Gavin
+ */
 package com.example.tidegrab;
 
 import java.io.IOException;
@@ -30,10 +33,19 @@ public class Scraper {
 	
 	TideInfo tideInfo;
 	
+	//Default constructor, useful for JUnit
+	public Scraper(){
+		
+	}
+	
 	public Scraper(TideApplication tideApplication){
 		 tideInfo = new TideInfo();
 		 tideData = new ArrayList<GraphViewData>();
 		 this.tideApp = tideApplication;
+	}
+	
+	public TideInfo get_tideInfo(){
+		return tideInfo;
 	}
 	
 	//Updates the GraphView of the Activity currently running
@@ -58,7 +70,7 @@ public class Scraper {
 	}
 	
 	//Handles the extraction of data from the internet. Invokes methods to update the Graph View.
-    class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
+    public class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
         String info;
     	Elements rows;
 
@@ -96,7 +108,7 @@ public class Scraper {
         }
         
         //Extracts Height data from an HTML document. Stores the data into tideData
-        private void extractHeight(Document doc){
+        public String extractHeight(Document doc){
         	int iteration = 0;
         	int rownum = 0;
         	
@@ -133,6 +145,8 @@ public class Scraper {
                     rownum++;  
                 }	
         	}
+        	//Returned for testing purposes
+        	return info;
         }
     }
        
