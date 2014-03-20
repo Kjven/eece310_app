@@ -73,54 +73,15 @@ public class Scraper {
             mProgressDialog.show();
             Log.d("Gbug", "preExecute finished");
         }
- 
+        
         @Override
         protected GraphViewSeries doInBackground(String... params) {
-        	int iteration = 0;
-        	int rownum = 0;
-        	Elements tds = null;
             try {
             	Log.d("Gbug", "GraphView doInBackground started");
-                // Connect to the web site
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
             	Document doc = Jsoup.connect(url).get();
             	tideData.clear();
-            	
-            	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
-	                    for (Element row : table.select("tr")) {
-	                    	info = "";
-	                        Log.d("Scraped", "Row #: " + Integer.toString(rownum)); 
-	                        
-	                    	//Grabbing the heights
-	                        tds = null;
-	                       tds = row.select("td");
-	                        Log.d("Scraped", "Row size: " + Integer.toString(tds.size()));
-	                        if(tds.size() > 1){
-	                        	Log.d("Scraped", "tds.size meets threshold");
-	                        	for( int hour = 0; hour < tds.size(); hour++){
-	                        		
-	                        		String text = tds.get(hour).text();
-	                        		
-	                        		info += Integer.toString(hour); //Outputting the associated hour as well
-	                        		info += ": " + text;
-	                        		info += "  ,  ";
-	                        		
-	                        		//Currently Only Graphing Data for the first available date
-	                        		if(iteration == 0){
-	                        			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
-	                        		}
-	                        		
-	                        	}
-	                        		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
-	                        		Log.d("Scraped", info);
-	                        		info += "\n";
-	                        	iteration++;
-	                        }
-	                        rownum++;
-	                        
-	                    }
-            		
-                }
+            	extractHeight(doc);           	
             	
             } catch (IOException e) {
                 e.printStackTrace();
@@ -132,6 +93,46 @@ public class Scraper {
         protected void onPostExecute(GraphViewSeries result) {
             mProgressDialog.dismiss();
             updateTideGraph();
+        }
+        
+        //Extracts Height data from an HTML document. Stores the data into tideData
+        private void extractHeight(Document doc){
+        	int iteration = 0;
+        	int rownum = 0;
+        	
+        	Elements tds = null;
+        	
+        	for (Element table : doc.select("table[title=Predicted Hourly Heights (m)]")) {
+                for (Element row : table.select("tr")) {
+                	info = "";
+                    Log.d("Scraped", "Row #: " + Integer.toString(rownum)); 
+                    
+                	//Grabbing the heights
+                    tds = null;
+                    tds = row.select("td");
+                    Log.d("Scraped", "Row size: " + Integer.toString(tds.size()));
+                    if(tds.size() > 1){
+                    	Log.d("Scraped", "tds.size meets threshold");
+                    	for( int hour = 0; hour < tds.size(); hour++){	
+                    		String text = tds.get(hour).text();
+                    		
+                    		info += Integer.toString(hour); //Outputting the associated hour as well
+                    		info += ": " + text;
+                    		info += "  ,  ";
+                    		
+                    		//Currently Only Graphing Data for the first available date
+                    		if(iteration == 0){
+                    			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
+                    		}	
+                    	}
+                    		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
+                    		Log.d("Scraped", info);
+                    		info += "\n";
+                    	iteration++;
+                    }
+                    rownum++;  
+                }	
+        	}
         }
     }
        
