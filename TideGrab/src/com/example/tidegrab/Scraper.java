@@ -101,8 +101,10 @@ public class Scraper {
         public GraphViewData[][] extractTideHeight(Document doc){
         	Log.d("Gbug", "Entered extractTideHeight");
         	int rownum = 0; //Debugging variable
+        	
         	ArrayList<GraphViewData[]> tideDataList = new ArrayList<GraphViewData[]>();
         	ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
+        	String dataDate = null;
         	
         	Elements tds = null;
         	
@@ -116,6 +118,9 @@ public class Scraper {
                     tds = row.select("td");
                     Log.d("Scraped", "Row size: " + Integer.toString(tds.size()));
                     if(tds.size() > 1){
+                    	for (Element th: row.select("th")){
+                    		dataDate = th.text();
+                    	}
                     	Log.d("Scraped", "tds.size meets threshold");
                     	for( int hour = 0; hour < tds.size(); hour++){	
                     		String text = tds.get(hour).text();
@@ -128,9 +133,11 @@ public class Scraper {
                     			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
                     	}
                     		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
+                    		Log.d("Scraped", "Date: " + dataDate);
                     		Log.d("Scraped", info);
                     		info += "\n";
                     	Log.d("Gbug", "Entering tideDataList element");
+                    	
                     	tideDataList.add(tideData.toArray(new GraphViewData[tideData.size()]));
                     	tideData.clear();
                     }
