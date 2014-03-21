@@ -50,6 +50,7 @@ public class Scraper {
 		tideApp.getActivity().runOnUiThread(new Runnable() {
 		    public void run() {
 		    	((TideGraphView) graph).UpdateGraph(series);
+		    	
 		    }
 		});		
 	}
@@ -78,10 +79,13 @@ public class Scraper {
             try {
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
-            	Document doc = Jsoup.connect(url).get();
-            	GraphViewData[] tideHeights = extractTideHeight(doc);     
-            	String graphTitle = extractStationName(doc);
-            	result = new GraphViewSeries(graphTitle, null, tideHeights);
+            	Document doc = Jsoup.connect(url).get();           	
+            	Log.d("Gbug", "Going to extract heights");
+            	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
+            	Log.d("Gbug", "Tide Heights extracted");
+            	
+            	tideDataSet firstSet = tideDataSetList.get(0);
+            	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -94,11 +98,15 @@ public class Scraper {
             updateTideGraph(result);
         }
         
-        //Extracts Height data from an HTML document. Returns a graph view series.
-        public GraphViewData[] extractTideHeight(Document doc){
-        	int iteration = 0;
-        	int rownum = 0;
+        //Extracts Height data from an HTML document, converts information into tideDataSet objects
+		public ArrayList<tideDataSet> extractTideHeight(Document doc){
+        	Log.d("Gbug", "Entered extractTideHeight");
+        	int rownum = 0; //Debugging variable
+        	
+        	
+        	ArrayList<tideDataSet> tideDataSetList = new ArrayList<tideDataSet>();
         	ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
+        	String dataDate = null;
         	
         	Elements tds = null;
         	
@@ -112,6 +120,9 @@ public class Scraper {
                     tds = row.select("td");
                     Log.d("Scraped", "Row size: " + Integer.toString(tds.size()));
                     if(tds.size() > 1){
+                    	for (Element th: row.select("th")){
+                    		dataDate = th.text();
+                    	}
                     	Log.d("Scraped", "tds.size meets threshold");
                     	for( int hour = 0; hour < tds.size(); hour++){	
                     		String text = tds.get(hour).text();
@@ -121,26 +132,37 @@ public class Scraper {
                     		info += "  ,  ";
                     		
                     		//Currently Only Graphing Data for the first available date
-                    		if(iteration == 0){
                     			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
-                    		}	
                     	}
                     		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
+                    		Log.d("Scraped", "Date: " + dataDate);
                     		Log.d("Scraped", info);
                     		info += "\n";
-                    	iteration++;
+                    	Log.d("Gbug", "Entering tideDataList element");
+                    	
+                    	String stationTitle = extractStationName(doc);
+                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new GraphViewData[tideData.size()]), stationTitle, dataDate);
+                    	tideDataSetList.add(currentSet);
+                    	Log.d("Gbug", "Entered tideDataSetList element");
+                    	tideData.clear();
+                    
                     }
                     rownum++;  
                 }	
         	}
         	
-        	//Convert to graph view series and return
-        	return tideData.toArray(new GraphViewData[tideData.size()]);
+        	Log.d("Gbug", "Returning tideDataSetList");
+        	return tideDataSetList;
         }
         
+        //Extracts the Station Name from the Document
         private String extractStationName(Document doc) {
-	        // TODO IMPLEMENT THIS
-	        return "EXAMPLE TIDE STATION";
+        	String stationTitle = null;
+        	for (Element h1 : doc.select("h1[class=background-accent font-xlarge")) {
+        		stationTitle = h1.text();
+        	}
+        	Log.d("Gbug", "Station Title: " + stationTitle);
+	        return stationTitle;
         }
     } 
 }
