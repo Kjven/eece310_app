@@ -79,12 +79,13 @@ public class Scraper {
             try {
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
-            	Document doc = Jsoup.connect(url).get();
+            	Document doc = Jsoup.connect(url).get();           	
             	Log.d("Gbug", "Going to extract heights");
-            	GraphViewData[] tideHeights = extractTideHeight(doc)[0];   
+            	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
             	Log.d("Gbug", "Tide Heights extracted");
-            	String graphTitle = extractStationName(doc);
-            	result = new GraphViewSeries(graphTitle, null, tideHeights);
+            	
+            	tideDataSet firstSet = tideDataSetList.get(0);
+            	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -97,12 +98,13 @@ public class Scraper {
             updateTideGraph(result);
         }
         
-        //Extracts Height data from an HTML document. Returns a graph view series.
-        public GraphViewData[][] extractTideHeight(Document doc){
+        //Extracts Height data from an HTML document, converts information into tideDataSet objects
+		public ArrayList<tideDataSet> extractTideHeight(Document doc){
         	Log.d("Gbug", "Entered extractTideHeight");
         	int rownum = 0; //Debugging variable
         	
-        	ArrayList<GraphViewData[]> tideDataList = new ArrayList<GraphViewData[]>();
+        	
+        	ArrayList<tideDataSet> tideDataSetList = new ArrayList<tideDataSet>();
         	ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
         	String dataDate = null;
         	
@@ -138,15 +140,19 @@ public class Scraper {
                     		info += "\n";
                     	Log.d("Gbug", "Entering tideDataList element");
                     	
-                    	tideDataList.add(tideData.toArray(new GraphViewData[tideData.size()]));
+                    	String stationTitle = extractStationName(doc);
+                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new GraphViewData[tideData.size()]), stationTitle, dataDate);
+                    	tideDataSetList.add(currentSet);
+                    	Log.d("Gbug", "Entered tideDataSetList element");
                     	tideData.clear();
+                    
                     }
                     rownum++;  
                 }	
         	}
         	
-        	Log.d("Gbug", "Returning tideDataList array");
-        	return tideDataList.toArray(new GraphViewData[tideDataList.size()][]);
+        	Log.d("Gbug", "Returning tideDataSetList");
+        	return tideDataSetList;
         }
         
         //Extracts the Station Name from the Document
