@@ -50,6 +50,7 @@ public class Scraper {
 		tideApp.getActivity().runOnUiThread(new Runnable() {
 		    public void run() {
 		    	((TideGraphView) graph).UpdateGraph(series);
+		    	
 		    }
 		});		
 	}
@@ -99,9 +100,7 @@ public class Scraper {
         //Extracts Height data from an HTML document. Returns a graph view series.
         public GraphViewData[][] extractTideHeight(Document doc){
         	Log.d("Gbug", "Entered extractTideHeight");
-        	int iteration = 0;
-        	int rownum = 0;
-        	
+        	int rownum = 0; //Debugging variable
         	ArrayList<GraphViewData[]> tideDataList = new ArrayList<GraphViewData[]>();
         	ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
         	
@@ -126,9 +125,7 @@ public class Scraper {
                     		info += "  ,  ";
                     		
                     		//Currently Only Graphing Data for the first available date
-                    		//if(iteration == 0){
                     			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
-                    		//}	
                     	}
                     		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
                     		Log.d("Scraped", info);
@@ -136,20 +133,23 @@ public class Scraper {
                     	Log.d("Gbug", "Entering tideDataList element");
                     	tideDataList.add(tideData.toArray(new GraphViewData[tideData.size()]));
                     	tideData.clear();
-                    	iteration++;
                     }
                     rownum++;  
                 }	
         	}
         	
-        	//Convert to graph view series and return
-        	Log.d("Gbug", "Returning tideDataList");
+        	Log.d("Gbug", "Returning tideDataList array");
         	return tideDataList.toArray(new GraphViewData[tideDataList.size()][]);
         }
         
+        //Extracts the Station Name from the Document
         private String extractStationName(Document doc) {
-	        // TODO IMPLEMENT THIS
-	        return "EXAMPLE TIDE STATION";
+        	String stationTitle = null;
+        	for (Element h1 : doc.select("h1[class=background-accent font-xlarge")) {
+        		stationTitle = h1.text();
+        	}
+        	Log.d("Gbug", "Station Title: " + stationTitle);
+	        return stationTitle;
         }
     } 
 }
