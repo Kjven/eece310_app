@@ -1,5 +1,6 @@
 package com.example.tidegrab;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -8,7 +9,9 @@ import android.util.Log;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 
 //Stores the set of tide heights, associated with a particular date and station
-public class tideDataSet {
+public class tideDataSet implements Serializable {
+	
+	private static final long serialVersionUID = -8629703701445663529L;
 	private GraphViewData[] graphData;
 	private String stationTitle;
 	private Calendar dataDate; //
@@ -21,6 +24,18 @@ public class tideDataSet {
 		setgraphData(graphViewData);
 		setstationTitle(title);
 		setDate(date);
+	}
+	
+	public tideDataSet(GraphViewData[] graphViewData, String title, Calendar date){
+		Log.d("tideData", "Entered tideDataSet constructor");
+		
+		dataDate = new GregorianCalendar();
+		
+		setgraphData(graphViewData);
+		setstationTitle(title);
+		
+		dataDate = (Calendar) date.clone();
+		
 	}
 	
 	public GraphViewData[] getData(){
