@@ -1,6 +1,9 @@
 /**
  * @author Gavin
  */
+
+package test.android.tidegrab;
+
 import static org.junit.Assert.*;
 
 import java.io.IOException;
@@ -12,11 +15,11 @@ import org.junit.Test;
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.tidegrab.MainActivity;
-import com.example.tidegrab.Scraper;
-import com.example.tidegrab.Scraper.TideInfo;
-import com.example.tidegrab.TideApplication;
-import com.example.tidegrab.superActivity;
+import com.android.tidegrab.MainActivity;
+import com.android.tidegrab.Scraper;
+import com.android.tidegrab.TideApplication;
+import com.android.tidegrab.superActivity;
+import com.android.tidegrab.Scraper.TideInfo;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LineGraphView;
 

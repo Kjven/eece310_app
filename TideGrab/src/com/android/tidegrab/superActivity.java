@@ -1,4 +1,4 @@
-package com.example.tidegrab;
+package com.android.tidegrab;
 
 import com.jjoe64.graphview.GraphView;
 

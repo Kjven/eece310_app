@@ -1,7 +1,7 @@
 /**
  * @author Gavin
  */
-package com.example.tidegrab;
+package com.android.tidegrab;
 
 import java.io.IOException;
 import java.util.ArrayList;

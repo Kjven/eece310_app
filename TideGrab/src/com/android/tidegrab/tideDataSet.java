@@ -1,4 +1,4 @@
-package com.example.tidegrab;
+package com.android.tidegrab;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
