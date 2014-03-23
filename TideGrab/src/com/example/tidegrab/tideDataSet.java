@@ -2,21 +2,22 @@ package com.example.tidegrab;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import android.util.Log;
 
-import com.jjoe64.graphview.GraphView.GraphViewData;
+//import com.jjoe64.graphview.GraphView.GraphViewData;
 
 //Stores the set of tide heights, associated with a particular date and station
 public class tideDataSet implements Serializable {
 	
 	private static final long serialVersionUID = -8629703701445663529L;
-	private GraphViewData[] graphData;
+	private TideGraphView.GraphViewData[] graphData;
 	private String stationTitle;
 	private Calendar dataDate; //
 	
-	public tideDataSet(GraphViewData[] graphViewData, String title, String date){
+	public tideDataSet(TideGraphView.GraphViewData[] graphViewData, String title, String date){
 		Log.d("tideData", "Entered tideDataSet constructor");
 		
 		dataDate = new GregorianCalendar();
@@ -26,7 +27,7 @@ public class tideDataSet implements Serializable {
 		setDate(date);
 	}
 	
-	public tideDataSet(GraphViewData[] graphViewData, String title, Calendar date){
+	public tideDataSet(TideGraphView.GraphViewData[] graphViewData, String title, Calendar date){
 		Log.d("tideData", "Entered tideDataSet constructor");
 		
 		dataDate = new GregorianCalendar();
@@ -38,16 +39,17 @@ public class tideDataSet implements Serializable {
 		
 	}
 	
-	public GraphViewData[] getData(){
-		return graphData;
+	public TideGraphView.GraphViewData[] getData(){
+		return graphData.clone();
 	}
 	
 	public String getTitle(){
-		return stationTitle;
+		return new String(stationTitle);
 	}
 	
 	public Calendar getDate(){
-		return dataDate;
+		//return dataDate;
+		return (Calendar) dataDate.clone();
 	}
 	
 	//Parses a '/' delimited String, and converts it to a Calendar object
@@ -57,11 +59,14 @@ public class tideDataSet implements Serializable {
 		String[] date = new String[3];
 		date = dateString.split("/");
 		dataDate.set(Integer.parseInt(date[0]), (Integer.parseInt(date[1])) - 1, Integer.parseInt(date[2]));
-		
+		dataDate.clear(Calendar.HOUR);
+		dataDate.clear(Calendar.MINUTE);
+		dataDate.clear(Calendar.SECOND);
+		dataDate.clear(Calendar.MILLISECOND);
 		Log.d("tideData", "tideDataSet: setDate exited");
 	}
 	
-	public void setgraphData(GraphViewData[] graphViewData){
+	public void setgraphData(TideGraphView.GraphViewData[] graphViewData){
 		Log.d("tideData", "tideDataSet: setGraphData entered");
 		this.graphData = graphViewData.clone();
 		Log.d("tideData", "tideDataSet: setGraphData exited");

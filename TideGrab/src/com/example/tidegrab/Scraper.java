@@ -44,7 +44,7 @@ public class Scraper {
 	}
 	
 	//Updates the GraphView of the Activity currently running
-	public void updateTideGraph(final GraphViewSeries series){
+	synchronized public void updateTideGraph(final GraphViewSeries series){
 		this.graph = tideApp.getGraph();
 
 		tideApp.getActivity().runOnUiThread(new Runnable() {
@@ -85,6 +85,12 @@ public class Scraper {
             	Log.d("Gbug", "Tide Heights extracted");
             	
             	tideDataSet firstSet = tideDataSetList.get(0);
+            	
+            	Log.d("Gbug", "Updating/Adding to internal memory");
+            	//Must check internal memory for this data, and add/update it accordingly
+            	//tideApp.getStorage().writeDataSet(firstSet);
+            	tideApp.getStorage().writeDataSet(new tideDataSet(firstSet.getData(), firstSet.getTitle(), firstSet.getDate()));
+            	Log.d("Gbug", "Successfully Updated/Added internal memory");
             	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -105,7 +111,7 @@ public class Scraper {
         	
         	
         	ArrayList<tideDataSet> tideDataSetList = new ArrayList<tideDataSet>();
-        	ArrayList<GraphViewData> tideData = new ArrayList<GraphViewData>();
+        	ArrayList<TideGraphView.GraphViewData> tideData = new ArrayList<TideGraphView.GraphViewData>();
         	String dataDate = null;
         	
         	Elements tds = null;
@@ -132,7 +138,7 @@ public class Scraper {
                     		info += "  ,  ";
                     		
                     		//Currently Only Graphing Data for the first available date
-                    			tideData.add(new GraphViewData(hour, Float.parseFloat(text)));
+                    			tideData.add(new TideGraphView.GraphViewData(hour, Float.parseFloat(text)));
                     	}
                     		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
                     		Log.d("Scraped", "Date: " + dataDate);
@@ -141,7 +147,7 @@ public class Scraper {
                     	Log.d("Gbug", "Entering tideDataList element");
                     	
                     	String stationTitle = extractStationName(doc);
-                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new GraphViewData[tideData.size()]), stationTitle, dataDate);
+                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new TideGraphView.GraphViewData[tideData.size()]), stationTitle, dataDate);
                     	tideDataSetList.add(currentSet);
                     	Log.d("Gbug", "Entered tideDataSetList element");
                     	tideData.clear();
