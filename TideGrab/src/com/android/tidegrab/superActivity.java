@@ -19,7 +19,4 @@ public abstract class superActivity extends Activity{
 		tideApp = (TideApplication)getApplication();
 		tideApp.currentGraph = currentGraph;
 	}
-	
-	
-	
 }

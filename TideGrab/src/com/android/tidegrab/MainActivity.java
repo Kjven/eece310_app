@@ -2,12 +2,11 @@ package com.android.tidegrab;
 
 import android.os.Bundle;
 
-import com.example.tidegrab.R;
+import com.android.tidegrab.R;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
-
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
