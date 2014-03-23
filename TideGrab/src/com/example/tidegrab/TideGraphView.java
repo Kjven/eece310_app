@@ -52,5 +52,16 @@ public class TideGraphView extends LineGraphView implements Serializable {
 		public double getY() {
 			return valueY;
 		}
+		
+		@Override
+		public boolean equals(Object other){
+			if((this.getX() == ((GraphViewDataInterface) other).getX()) && this.getY() == (((GraphViewDataInterface) other).getY() )){
+				return true;
+			}else{
+				return false;
+			}
+			
+		}
+		
 	}
 }

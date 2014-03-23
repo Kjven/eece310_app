@@ -51,8 +51,8 @@ public class DataStorage implements Serializable{
 			if((newDataSet.getDate().equals(dataSetList.get(i).getDate())) && (newDataSet.getTitle().equals(dataSetList.get(i).getTitle())) ){
 				Log.d("DataStorage", "Date and Title are equal");
 				//if(newDataSet.getData().deepEquals(dataSetList.get(i).getData())){
-				//if(Arrays.deepEquals(newDataSet.getData(),dataSetList.get(i).getData())){
-				if(newDataSet.getData()[0].getX() == dataSetList.get(i).getData()[0].getX()){
+				if(Arrays.deepEquals(newDataSet.getData(),dataSetList.get(i).getData())){
+				//if(newDataSet.getData()[0].getX() == dataSetList.get(i).getData()[0].getX()){
 
 					Log.d("DataStorage", "DataSets equivalent");
 					return;
