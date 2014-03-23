@@ -1,4 +1,4 @@
-package com.example.tidegrab;
+package com.android.tidegrab;
 
 import java.io.Serializable;
 import java.util.Calendar;
