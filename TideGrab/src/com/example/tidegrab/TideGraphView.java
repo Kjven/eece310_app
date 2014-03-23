@@ -8,17 +8,10 @@ import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
 
-public class TideGraphView extends LineGraphView implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1096377759357548033L;
-
+public class TideGraphView extends LineGraphView {
 
 	public TideGraphView(Context context, String title){
 	    super(context, title);
-	    // TODO Auto-generated constructor stub
     }
 	
 	
@@ -33,12 +26,12 @@ public class TideGraphView extends LineGraphView implements Serializable {
 	}
 	
 	static public class GraphViewData implements GraphViewDataInterface, Serializable {
-		/**
-		 * 
-		 */
+		
 		private static final long serialVersionUID = -4831840753410431851L;
+		
 		public final double valueX;
 		public final double valueY;
+		
 		public GraphViewData(double valueX, double valueY) {
 			super();
 			this.valueX = valueX;
@@ -59,8 +52,7 @@ public class TideGraphView extends LineGraphView implements Serializable {
 				return true;
 			}else{
 				return false;
-			}
-			
+			}	
 		}
 		
 	}

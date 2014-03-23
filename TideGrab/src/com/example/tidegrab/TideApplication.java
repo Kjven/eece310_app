@@ -13,6 +13,7 @@ public class TideApplication extends Application {
 	public Activity currentActivity;
 	public GraphView currentGraph;
 	public DataStorage internalData;
+	
 		public TideApplication(){
 			super();
 		}
@@ -22,13 +23,10 @@ public class TideApplication extends Application {
 			try {
 				internalData = new DataStorage(this);
 			} catch (StreamCorruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

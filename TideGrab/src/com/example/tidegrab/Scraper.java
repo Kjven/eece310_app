@@ -49,8 +49,7 @@ public class Scraper {
 
 		tideApp.getActivity().runOnUiThread(new Runnable() {
 		    public void run() {
-		    	((TideGraphView) graph).UpdateGraph(series);
-		    	
+		    	((TideGraphView) graph).UpdateGraph(series);	
 		    }
 		});		
 	}
@@ -62,7 +61,7 @@ public class Scraper {
     	Elements rows;
 
         @Override
-        protected void onPreExecute() {
+        protected void onPreExecute(){
         	Log.d("Gbug", "AsyncTask called");
         	super.onPreExecute();
             mProgressDialog = new ProgressDialog(tideApp.getActivity());
@@ -80,15 +79,12 @@ public class Scraper {
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
             	Document doc = Jsoup.connect(url).get();           	
-            	Log.d("Gbug", "Going to extract heights");
             	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
             	Log.d("Gbug", "Tide Heights extracted");
             	
             	tideDataSet firstSet = tideDataSetList.get(0);
             	
-            	Log.d("Gbug", "Updating/Adding to internal memory");
             	//Must check internal memory for this data, and add/update it accordingly
-            	//tideApp.getStorage().writeDataSet(firstSet);
             	tideApp.getStorage().writeDataSet(new tideDataSet(firstSet.getData(), firstSet.getTitle(), firstSet.getDate()));
             	Log.d("Gbug", "Successfully Updated/Added internal memory");
             	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
@@ -133,17 +129,17 @@ public class Scraper {
                     	for( int hour = 0; hour < tds.size(); hour++){	
                     		String text = tds.get(hour).text();
                     		
-                    		info += Integer.toString(hour); //Outputting the associated hour as well
+                    		//For Debug Logging
+                    		info += Integer.toString(hour);
                     		info += ": " + text;
                     		info += "  ,  ";
                     		
-                    		//Currently Only Graphing Data for the first available date
-                    			tideData.add(new TideGraphView.GraphViewData(hour, Float.parseFloat(text)));
+                    		tideData.add(new TideGraphView.GraphViewData(hour, Float.parseFloat(text)));
                     	}
-                    		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
-                    		Log.d("Scraped", "Date: " + dataDate);
-                    		Log.d("Scraped", info);
-                    		info += "\n";
+                		Log.d("Scraped", "Td Size: " + Integer.toString(tds.size()));
+                		Log.d("Scraped", "Date: " + dataDate);
+                		Log.d("Scraped", info);
+                		info += "\n";
                     	Log.d("Gbug", "Entering tideDataList element");
                     	
                     	String stationTitle = extractStationName(doc);
