@@ -7,6 +7,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/GraphView-3.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/GitHub/eece310_app/TideGrab/libs/GraphView-3.1.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
