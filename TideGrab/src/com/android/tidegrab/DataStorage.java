@@ -2,6 +2,7 @@ package com.android.tidegrab;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,13 +25,13 @@ public class DataStorage{
 	
 	public DataStorage(TideApplication tideApp) throws StreamCorruptedException, ClassNotFoundException, IOException{
 		Log.d("Gbug", "Retrieving Internal Memory");
-		retrieveDataSet();
 		tideApplication = tideApp;
+		retrieveDataSet();		
 		Log.d("Gbug", "Internal Memory Retrieved");
 	}
 	
 	//Given a tideDataSet, either updates dataSetList with the new value of the tideDataSet, or adds the new tideDataSet to the list
-	public void writeDataSet(tideDataSet newDataSet) throws IOException{
+	public void writeDataSet(tideDataSet newDataSet) throws IOException, ClassNotFoundException{
 		Log.d("DataStorage", "writeDataSet entered");
 		for(int i = 0; i < dataSetList.size(); i++)	{
 			Log.d("DataStorage", "Loop iteration: " + Integer.toString(i));
@@ -52,20 +53,24 @@ public class DataStorage{
 		dataSetList.add(newDataSet);
 		writeStorage(newDataSet);
 		Log.d("DataStorage", "Storage written, exiting writeDataSet");
+		retrieveDataSet();
 	}
 	
 	//Retrieves the ArrayList data from memory
 	@SuppressWarnings("unchecked")
 	synchronized public void retrieveDataSet() throws StreamCorruptedException, IOException, ClassNotFoundException{
-		File file = new File(dataSets);
-		if(file.exists()){
-			FileInputStream filein = new FileInputStream(file);
-			ObjectInputStream in = new ObjectInputStream(filein);
-			dataSetList = (ArrayList<tideDataSet>) in.readObject();
-		}else{
-			Log.d("Gbug", "File not found on disc");
-			dataSetList = new ArrayList<tideDataSet>();
+		
+		try{
+		FileInputStream filein = tideApplication.getApplicationContext().openFileInput(dataSets);
+		ObjectInputStream in = new ObjectInputStream(filein);
+		dataSetList = (ArrayList<tideDataSet>) in.readObject();
+		in.close();
+		filein.close();
+		}catch(FileNotFoundException e){
+		Log.d("Gbug", "File not found on disc2");
+		dataSetList = new ArrayList<tideDataSet>();
 		}
+		
 	}
 	
 	//Write the dataSetList into memory

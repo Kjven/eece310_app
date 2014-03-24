@@ -85,7 +85,12 @@ public class Scraper {
             	tideDataSet firstSet = tideDataSetList.get(0);
             	
             	//Must check internal memory for this data, and add/update it accordingly
-            	tideApp.getStorage().writeDataSet(new tideDataSet(firstSet.getData(), firstSet.getTitle(), firstSet.getDate()));
+            	try {
+					tideApp.getStorage().writeDataSet(new tideDataSet(firstSet.getData(), firstSet.getTitle(), firstSet.getDate()));
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
             	Log.d("Gbug", "Successfully Updated/Added internal memory");
             	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
             } catch (IOException e) {
