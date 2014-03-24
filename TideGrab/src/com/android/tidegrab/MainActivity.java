@@ -1,24 +1,20 @@
 package com.android.tidegrab;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import com.android.tidegrab.R;
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GraphView.GraphViewData;
-import com.jjoe64.graphview.GraphViewSeries;
-import com.jjoe64.graphview.LineGraphView;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.jjoe64.graphview.GraphView;
+
 
 public class MainActivity extends superActivity {
-		
+	public final static String stationID = "sid";
 	Spinner spinner;
 	Scraper tideScrape;
 	GraphView graph;
@@ -28,10 +24,6 @@ public class MainActivity extends superActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
          
-		//Create the graph
-        graph = new TideGraphView(this, "Tide Heights");
-        ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
-		
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
 		
 		//Setting up the Spinner
@@ -48,35 +40,34 @@ public class MainActivity extends superActivity {
             	TextView sidInput = (TextView)findViewById(R.id.sidInput);
             	String sid = sidInput.getText().toString();
             	
-            	tideScrape = new Scraper(tideApp);
-                tideScrape.tideInfo.execute(sid);
+            	Intent graphIntent = new Intent(MainActivity.this, GraphActivity.class);
+            	graphIntent.putExtra(stationID, sid);
+            	startActivityForResult(graphIntent, 0);
+                finish();
                 
             }
         });
-        //Set the current Activity and GraphView in the TideApplication 
-        setActivity(this);
-        setGraph(graph);
       
 	}
 	
-	//Creates an example sine series displayed on the provided graph.
-	private void createExampleSineSeries(GraphView graph){
-		// sin curve
-		int num = 150;
-		GraphViewData[] data = new GraphViewData[num];
-		double v=0;
-		for (int i=0; i<num; i++) {
-		   v += 0.2;
-		   data[i] = new GraphViewData(i, Math.sin(v));
-		}
-		GraphViewSeries seriesSin = new GraphViewSeries("Sine Curve", null, data);
-		graph.removeAllSeries();
-		graph.addSeries(seriesSin);
-
-        graph.setViewPort(25, 25);
-        graph.setScrollable(true);
-        graph.setScalable(true);
-	}
+//	//Creates an example sine series displayed on the provided graph.
+//	private void createExampleSineSeries(GraphView graph){
+//		// sin curve
+//		int num = 150;
+//		GraphViewData[] data = new GraphViewData[num];
+//		double v=0;
+//		for (int i=0; i<num; i++) {
+//		   v += 0.2;
+//		   data[i] = new GraphViewData(i, Math.sin(v));
+//		}
+//		GraphViewSeries seriesSin = new GraphViewSeries("Sine Curve", null, data);
+//		graph.removeAllSeries();
+//		graph.addSeries(seriesSin);
+//
+//        graph.setViewPort(25, 25);
+//        graph.setScrollable(true);
+//        graph.setScalable(true);
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
