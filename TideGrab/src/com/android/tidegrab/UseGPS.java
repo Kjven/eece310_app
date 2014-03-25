@@ -2,10 +2,12 @@ package com.android.tidegrab;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -55,6 +57,17 @@ public class UseGPS extends superActivity {
 		
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras)	{}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handles the home/back button press
+		switch (item.getItemId()) {
+        case android.R.id.home:
+        	Intent intent = new Intent(UseGPS.this, MainActivity.class);
+        	startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
 	}
 
 }
