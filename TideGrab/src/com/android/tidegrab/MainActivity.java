@@ -27,6 +27,9 @@ public class MainActivity extends superActivity {
          
 		Button titlebutton = (Button)findViewById(R.id.titlebutton);
 		
+		//button to go to gps activity
+		Button gps_button = (Button) findViewById(R.id.gps_button);
+		
 		//Setting up the Spinner
 		spinner = (Spinner) findViewById(R.id.citySpinner);
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
@@ -34,8 +37,17 @@ public class MainActivity extends superActivity {
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 
-		
-		// Capture button click
+		// Capture gps button click
+		gps_button.setOnClickListener(new OnClickListener() {
+            public void onClick(View view0) {
+            	Intent gpsIntent = new Intent(MainActivity.this, UseGPS.class);
+            	startActivityForResult(gpsIntent, 0);
+                finish();
+                
+            }
+        });
+
+		// Capture graph button click
         titlebutton.setOnClickListener(new OnClickListener() {
             public void onClick(View arg0) {
             	TextView sidInput = (TextView)findViewById(R.id.sidInput);
