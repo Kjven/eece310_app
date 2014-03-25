@@ -27,4 +27,12 @@
 
     <string name="title_activity_graph">GraphActivity</string>
 
+    <string name="use_gps">Find Nearest City</string>
+
+    <string name="select_view">Select A City To View:</string>
+
+    <string name="search_station">Search By Tide Station:</string>
+
+    <string name="find_station">Find Station Tides</string>
+
 </resources>
