@@ -17,13 +17,11 @@ public class GraphActivity extends superActivity {
 	private String sid = null;
 	Scraper tideScrape;
 	GraphView graph;
-	Spinner spinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_graph);
-//		getActionBar().setDisplayHomeAsUpEnabled(true);
          
 		//Create the graph
         graph = new TideGraphView(this, "Tide Heights");
@@ -31,24 +29,14 @@ public class GraphActivity extends superActivity {
 		
         Intent intent = getIntent();
         sid = intent.getStringExtra(MainActivity.stationID);
-        Log.d("tag", sid);
-        Log.d("hello","testing4");
-        
-        Button titlebutton = (Button)findViewById(R.id.titlebutton);
-     // Capture button click
-        titlebutton.setOnClickListener(new OnClickListener() {
-            public void onClick(View arg0) {
-            	
-            	tideScrape = new Scraper(tideApp);
-                tideScrape.tideInfo.execute(sid);
-                
-            }
-        });
+    
   
         //Set the current Activity and GraphView in the TideApplication 
         setActivity(this);
         setGraph(graph);
       
+        tideScrape = new Scraper(tideApp);
+        tideScrape.tideInfo.execute(sid);
 	}
 	
 //	@Override
