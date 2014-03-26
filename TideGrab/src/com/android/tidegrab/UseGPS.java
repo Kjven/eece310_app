@@ -20,11 +20,13 @@ public class UseGPS extends superActivity {
 		
 		LocationManager mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		
+		/* CRASHES ON FIRST USE
 		//Display previously known location
 		Location old_loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); 
 		EditText t = (EditText) findViewById(R.id.prev_loc);
 		t.setText("Latitude = " + old_loc.getLatitude() + "\n"
 				+ "Longitude = " + old_loc.getLongitude());
+		*/
 		
 		//Get new GPS
 		LocationListener mlocListener = new MyLocationListener();
