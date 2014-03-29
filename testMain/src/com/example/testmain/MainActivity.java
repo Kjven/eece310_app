@@ -11,8 +11,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-	public final static String xcor = "sid";
-	public final static String ycor = "sid";
+	public final static String xcor = "0";
+	public final static String ycor = "0";
 	
     AlertDialog alertDialogStores;
     @Override
