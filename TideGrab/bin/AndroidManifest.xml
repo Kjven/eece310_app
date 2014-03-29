@@ -45,6 +45,15 @@
 			            android:name="android.support.PARENT_ACTIVITY"
 			            android:value="com.android.tidegrab.MainActivity" />
         </activity>
+        
+        <activity
+            android:name="com.android.tidegrab.OrganizeList"
+            android:label="OrganizeList"
+			android:parentActivityName="com.android.tidegrab.MainActivity" >
+			        <meta-data
+			            android:name="android.support.PARENT_ACTIVITY"
+			            android:value="com.android.tidegrab.MainActivity" />
+        </activity>
        
     </application>
 

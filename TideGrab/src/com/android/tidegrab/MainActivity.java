@@ -1,5 +1,6 @@
 package com.android.tidegrab;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,9 @@ public class MainActivity extends superActivity {
 	Spinner spinner;
 	Scraper tideScrape;
 	GraphView graph;
+	
+	//dont know what this is for
+	AlertDialog alertDialogStores;
           
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

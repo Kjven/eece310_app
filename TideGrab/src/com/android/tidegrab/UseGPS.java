@@ -1,6 +1,5 @@
 package com.android.tidegrab;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -8,6 +7,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -20,17 +22,26 @@ public class UseGPS extends superActivity {
 		
 		LocationManager mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		
-		/* CRASHES ON FIRST USE
-		//Display previously known location
-		Location old_loc = mlocManager.getLastKnownLocation(LocationManager.GPS_PROVIDER); 
-		EditText t = (EditText) findViewById(R.id.prev_loc);
-		t.setText("Latitude = " + old_loc.getLatitude() + "\n"
-				+ "Longitude = " + old_loc.getLongitude());
-		*/
-		
 		//Get new GPS
 		LocationListener mlocListener = new MyLocationListener();
 		mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+		
+		//button to display the list view
+		Button gps_button = (Button) findViewById(R.id.displayListView);
+
+		// Capture the list view display button
+		gps_button.setOnClickListener(new OnClickListener() {
+            public void onClick(View view0) {
+            	
+            	Intent intent = new Intent(UseGPS.this, OrganizeList.class);
+            	Bundle extras = new Bundle();
+            	extras.putString("xcor", "50");
+            	extras.putString("ycor", "120");
+            	intent.putExtras(extras);
+            	startActivityForResult(intent,0);
+                finish();
+            }
+        });
 	}
 	
 	public class MyLocationListener implements LocationListener {
