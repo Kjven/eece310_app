@@ -26,7 +26,7 @@ public class GraphActivity extends superActivity {
         ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
 		
         Intent intent = getIntent();
-        sid = intent.getStringExtra(MainActivity.stationID);
+        sid = intent.getStringExtra(OnItemClickListenerListViewItem.stationID);
     
   
         //Set the current Activity and GraphView in the TideApplication 

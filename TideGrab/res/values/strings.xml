@@ -5,34 +5,15 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
-    <string-array name="stations_array">
-        <item>Boat Harbour</item>
-        <item>Boom Islet</item>
-        <item>Dionisio Point</item>
-        <item>Gibsons</item>
-        <item>Halfmoon Bay</item>
-        <item>Nanaimo</item>
-        <item>New Westminster</item>
-        <item>Point Atkinson</item>
-        <item>Porpoise Bay</item>
-        <item>Port Moody</item>
-        <item>Sand Heads</item>
-        <item>Silva Bay</item>
-        <item>Squamish</item>
-        <item>Steveston</item>
-        <item>Tsawwassen</item>
-        <item>Vancouver</item>
-        <item>White Rock</item>
-    </string-array>
-
     <string name="title_activity_graph">GraphActivity</string>
 
-    <string name="use_gps">Find Nearest City</string>
+    <string name="use_gps">Find Nearest City With GPS</string>
 
     <string name="select_view">Select A City To View:</string>
 
     <string name="search_station">Search By Tide Station:</string>
-
-    <string name="find_station">Find Station Tides</string>
+	<string name="search_city">Select A Tide Station:</string>
+	
+    <string name="find_station">Search Station Number</string>
 
 </resources>
