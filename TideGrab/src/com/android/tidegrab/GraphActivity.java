@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 
 
@@ -23,6 +24,15 @@ public class GraphActivity extends superActivity {
          
 		//Create the graph
         graph = new TideGraphView(this, "Tide Heights");
+        graph.setCustomLabelFormatter(new CustomLabelFormatter() {
+        	   @Override
+        	   public String formatLabel(double value, boolean isValueX) {
+        	      if (!isValueX) {
+        	         return String.valueOf(Math.round(value));
+        	      }
+        	      return null; // let graphview generate X-axis label for us
+        	   }
+        	});
         ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
 		
         Intent intent = getIntent();
