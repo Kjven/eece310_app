@@ -8,63 +8,56 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" 
-    android:background="@color/home_color" >
-    
-    <Button
-        android:id="@+id/gps_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/use_gps" 
-        android:background="@drawable/button_press" />
-    
-	<TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:text="@string/search_city"
-        android:textSize="16sp" />
-	
-    <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="0.5"
-    android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/listview2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:background="@drawable/listview_colors" >
-        </ListView>
-
-	</LinearLayout>
-	
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:text="@string/search_station"
-        android:textSize="16sp" />
+	tools:context=".MainActivity"
+    android:focusable="true"
+	android:focusableInTouchMode="true" >
 
     <EditText
-        android:id="@+id/sidInput"
-        android:layout_width="match_parent"
+        android:id="@+id/curLoc"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:background="@drawable/listview_colors"
+        android:hint="Searching for current location..." />
+
+        
+    
+    <RelativeLayout
+        android:id="@+id/LinearLayout02"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Enter A Station Number"
-        android:paddingTop="8dp" >
+        android:paddingTop="4dp" >
 
-        <requestFocus />
-    </EditText>
+	    <Button
+            android:id="@+id/alpha"
+            android:layout_width="142dp"
+            android:layout_height="30dp"
+            android:background="@drawable/button_press"
+            android:textSize = "15sp"
+            android:text="Sort Alphabetically" />
 
-    <Button
-        android:id="@+id/titlebutton"
-        android:layout_width="match_parent"
+        <Button
+            android:id="@+id/gps_button"
+            android:layout_width="142dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+        	android:textSize = "15sp"
+            android:background="@drawable/button_press"
+            android:text="Sort By Distance" />
+	</RelativeLayout>
+    
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/find_station" 
-        android:background="@drawable/button_press" />
-
+        android:gravity="center"
+        android:text="Select Station:"
+        android:textSize="16sp" />
+	    
+    <ListView
+		android:id="@+id/listview2"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/listview_colors" />
+    
 </LinearLayout>
