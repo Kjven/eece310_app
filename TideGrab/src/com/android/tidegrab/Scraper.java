@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 
 //Contains methods and classes required to scrape tide data, and update Graph Views
