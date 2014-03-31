@@ -1,120 +1,19 @@
 package com.android.tidegrab;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
-public class UseGPS extends superActivity {
-	
-	private int showlist;
-	
+public class UseGPS extends MainActivity {
 	AlertDialog alertDialogStores;
+	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_gps);
-		
-		this.showlist = 1;
-		
-		LocationManager mlocManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		
-		//Get new GPS
-		LocationListener mlocListener = new MyLocationListener();
-		mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
-		
-//		// a button to show the pop up with a list view
-//        View.OnClickListener handler = new View.OnClickListener(){
-//            public void onClick(View v) {
-//                switch (v.getId()) {
-//                    case R.id.displayListView:
-//                        showPopUp();
-//                        break;
-//                }
-//            }
-//        };
-//        findViewById(R.id.displayListView).setOnClickListener(handler);
-	}
-	
-	public void showPopUp(double xco, double yco){
-        // add your items, this can be done programatically
-        // your items can be from a database
-		ObjectItem[] ObjectItemData = new ObjectItem[15];
-        ObjectItemData[0] = new ObjectItem(7480, "Boat Harbour", 49.09, 123.80);
-        ObjectItemData[1] = new ObjectItem(9227, "Bonilla Island", 53.49, 130.64);
-        ObjectItemData[2] = new ObjectItem(7535, "Dionisio Point", 49.01, 123.57);
-        ObjectItemData[3] = new ObjectItem(7820, "Gibsons", 49.40, 123.51);
-        ObjectItemData[4] = new ObjectItem(7830, "Halfmoon Bay", 49.51, 123.51);
-        ObjectItemData[5] = new ObjectItem(7917, "Nanaimo", 49.17, 123.93);
-        ObjectItemData[6] = new ObjectItem(7654, "New Westminster", 51, -125);
-        ObjectItemData[7] = new ObjectItem(7795, "Point Atkinson", 53, -127);
-        ObjectItemData[8] = new ObjectItem(7635, "Point Grey", 49.25, 123.27);
-        ObjectItemData[9] = new ObjectItem(7852, "Porpoise Bay", 49.48, 123.76);
-        ObjectItemData[10] = new ObjectItem(7755, "Port Moody", 49.29, 122.87);
-        ObjectItemData[11] = new ObjectItem(7594, "Sand Heads", 49.13, 123.20);
-        ObjectItemData[12] = new ObjectItem(7550, "Silva Bay", 49.15, 123.70);
-        ObjectItemData[13] = new ObjectItem(7810, "Squamish", 49.68, 123.17);
-        ObjectItemData[14] = new ObjectItem(7607, "Steveston", 49.13, 123.18);
-        ObjectItemData[12] = new ObjectItem(7590, "Tsawwassen", 49.00, 123.13);
-        ObjectItemData[13] = new ObjectItem(7735, "Vancouver", 55, -129);
-        ObjectItemData[14] = new ObjectItem(7577, "White Rock", 49.02, 122.80);
-        
-        ObjectItem[] NewObjectItemData = new ObjectItem[ObjectItemData.length];
-        
-        ObjectItem shortestObject;
-        ObjectItem previousObject;
-        int objectRemoved=0;
-        
-        for(int i=0;i < NewObjectItemData.length;i++){
-        	shortestObject = ObjectItemData[0];
-        	objectRemoved =0;
-        	
-        	//if there is only one item left to store, then store it
-        	if (ObjectItemData.length == 1){
-        		NewObjectItemData[i] = ObjectItemData[objectRemoved];
-            	ObjectItemData = ArrayUtils.remove(ObjectItemData, objectRemoved);
-        	}
-        	else {
-	        	//loop to check for the closest city
-	        	for(int j = 0;j < ObjectItemData.length-1; j++){
-	        		previousObject = shortestObject; //keep track of the current closest city
-	        		shortestObject = compare(shortestObject, ObjectItemData[j+1],xco, yco);
-	        		if (previousObject != shortestObject){//if the nearest city has been replaced then take note of which array item to delete later
-	        			objectRemoved = j+1; 
-	        		}
-	        			
-	            }
-	        	NewObjectItemData[i] = ObjectItemData[objectRemoved];
-	        	ObjectItemData = ArrayUtils.remove(ObjectItemData, objectRemoved);
-        	}
-        }
-        
-        //our adapter instance
-        ArrayAdapterItem adapter = new ArrayAdapterItem(this, R.layout.list_view_row_item, NewObjectItemData);
-        // create a new ListView, set the adapter and item click listener
-        ListView listViewItems = new ListView(this);
-        listViewItems.setAdapter(adapter);
-        listViewItems.setOnItemClickListener(new OnItemClickListenerListViewItem());
-        
-        // put the ListView in the pop up
-        alertDialogStores = new AlertDialog.Builder(UseGPS.this)
-            .setView(listViewItems)
-            .setTitle("Nearest Cities")
-            .show();
-    }
-	
-	//assuming that the earth is flat, compare() will calculate the closest point
+	public void onCreate(Bundle savedInstanceState) {}
+
 	public ObjectItem compare(ObjectItem a, ObjectItem b, double xco, double yco) {
     	double Axcoord = a.xCo;
     	double Aycoord = a.yCo;
@@ -134,21 +33,13 @@ public class UseGPS extends superActivity {
     }
 	
 	public class MyLocationListener implements LocationListener {
-	
-		
-		//Get current latitude and longitude and display in text box
+		//Get GPS coordinates and allow sort by distance
 		@Override
 		public void onLocationChanged(Location loc) {
-			String Text = "Latitude = " + loc.getLatitude() + "\n"
-					+ "Longitude = " + loc.getLongitude();	
-				
-			EditText et = (EditText) findViewById(R.id.gps_loc);
-			et.setText(Text);
-			
-			if (UseGPS.this.showlist == 1)
-				showPopUp(loc.getLatitude(),loc.getLongitude());
-			
-			UseGPS.this.showlist = 0;
+			MainActivity.latitude = loc.getLatitude();
+			MainActivity.longitude = loc.getLongitude();
+			MainActivity.showGPS();
+			MainActivity.enableSortDistance = 1;
 		}
 		
 		//Toast for when GPS is disabled
@@ -177,5 +68,4 @@ public class UseGPS extends superActivity {
         }
         return super.onOptionsItemSelected(item);
 	}
-
 }

@@ -8,21 +8,20 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" 
+	tools:context=".MainActivity"
     android:focusable="true"
-	android:focusableInTouchMode="true"
-    android:background="@color/home_color" >
-    
+	android:focusableInTouchMode="true" >
+
     <EditText
         android:id="@+id/curLoc"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
         android:gravity="center"
         android:background="@drawable/listview_colors"
-        android:hint="Searching for current location..."
-        >
-    </EditText>
+        android:hint="Searching for current location..." />
 
+        
+    
     <RelativeLayout
         android:id="@+id/LinearLayout02"
         android:layout_width="fill_parent"
@@ -30,11 +29,11 @@
         android:paddingTop="4dp" >
 
 	    <Button
-            android:id="@+id/alpha_button"
+            android:id="@+id/alpha"
             android:layout_width="142dp"
             android:layout_height="30dp"
             android:background="@drawable/button_press"
-            android:textSize = "15dp"
+            android:textSize = "15sp"
             android:text="Sort Alphabetically" />
 
         <Button
@@ -42,33 +41,23 @@
             android:layout_width="142dp"
             android:layout_height="30dp"
             android:layout_alignParentRight="true"
-        	android:textSize = "15dp"
+        	android:textSize = "15sp"
             android:background="@drawable/button_press"
-            android:text="Sort By Distance"/>
+            android:text="Sort By Distance" />
 	</RelativeLayout>
     
-    	<TextView
+    <TextView
         android:id="@+id/textView2"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="2dp"
         android:gravity="center"
         android:text="Select Station:"
         android:textSize="16sp" />
-	
-    <LinearLayout
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="0.5"
-    android:orientation="vertical" >
-
-        <ListView
-            android:id="@+id/listview2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" 
-            android:background="@drawable/listview_colors" >
-        </ListView>
-
-	</LinearLayout>
-	
+	    
+    <ListView
+		android:id="@+id/listview2"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/listview_colors" />
+    
 </LinearLayout>
