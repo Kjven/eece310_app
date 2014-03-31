@@ -11,6 +11,7 @@ public final class R {
     public static final class attr {
     }
     public static final class color {
+        public static final int grey=0x7f040004;
         public static final int home_color=0x7f040003;
         public static final int light_blue=0x7f040000;
         public static final int white=0x7f040002;
@@ -37,25 +38,21 @@ public final class R {
         public static final int listview_colors=0x7f020002;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f090005;
-        public static final int action_settings=0x7f09000c;
-        public static final int displayListView=0x7f090003;
-        public static final int gps_button=0x7f090006;
-        public static final int gps_loc=0x7f090001;
-        public static final int graph1=0x7f090004;
-        public static final int listview2=0x7f090008;
-        public static final int nearest_city=0x7f090002;
-        public static final int prev_loc=0x7f090000;
-        public static final int sidInput=0x7f090009;
-        public static final int textView2=0x7f090007;
-        public static final int textViewItem=0x7f09000b;
-        public static final int titlebutton=0x7f09000a;
+        public static final int LinearLayout02=0x7f090003;
+        public static final int LinearLayout1=0x7f090001;
+        public static final int action_settings=0x7f090009;
+        public static final int alpha=0x7f090004;
+        public static final int curLoc=0x7f090002;
+        public static final int gps_button=0x7f090005;
+        public static final int graph1=0x7f090000;
+        public static final int listview2=0x7f090007;
+        public static final int textView2=0x7f090006;
+        public static final int textViewItem=0x7f090008;
     }
     public static final class layout {
-        public static final int activity_gps=0x7f030000;
-        public static final int activity_graph=0x7f030001;
-        public static final int activity_main=0x7f030002;
-        public static final int list_view_row_item=0x7f030003;
+        public static final int activity_graph=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int list_view_row_item=0x7f030002;
     }
     public static final class menu {
         public static final int graph=0x7f080000;

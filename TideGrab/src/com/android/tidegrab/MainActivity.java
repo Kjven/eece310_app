@@ -1,6 +1,5 @@
 package com.android.tidegrab;
 
-<<<<<<< HEAD
 import org.apache.commons.lang3.ArrayUtils;
 
 import com.android.tidegrab.R;
@@ -9,19 +8,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.location.LocationListener;
 import android.location.LocationManager;
-=======
-import android.app.AlertDialog;
-import android.content.Intent;
->>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-<<<<<<< HEAD
 import android.widget.EditText;
-=======
->>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
 import android.widget.ListView;
 import android.widget.Spinner;
 import com.jjoe64.graphview.GraphView;
@@ -36,11 +28,6 @@ public class MainActivity extends superActivity {
 	Spinner spinner;
 	Scraper tideScrape;
 	GraphView graph;
-<<<<<<< HEAD
-=======
-	
-	//dont know what this is for
->>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
 	AlertDialog alertDialogStores;
           
 	@Override
@@ -49,7 +36,6 @@ public class MainActivity extends superActivity {
 		setContentView(R.layout.activity_main);
 
 		Button gps_button = (Button) findViewById(R.id.gps_button);
-<<<<<<< HEAD
 		Button alpha = (Button) findViewById(R.id.alpha);
         et = (EditText)findViewById(R.id.curLoc);
         showPopUpA();
@@ -61,10 +47,6 @@ public class MainActivity extends superActivity {
 		mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 		
 		//SORT BY DISTANCE
-=======
-
-		// Capture gps button click
->>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
 		gps_button.setOnClickListener(new OnClickListener() {
             public void onClick(View view0) {
             	
@@ -79,18 +61,9 @@ public class MainActivity extends superActivity {
             		showPopUpA();            			     
             }
         });
-<<<<<<< HEAD
 	}
 
 	public void showPopUpA(){
-=======
-        
-        showPopUp();
-      
-	}
-	
-	public void showPopUp(){
->>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
         // add your items, this can be done programatically
         // your items can be from a database
 		ObjectItem[] ObjectItemData = new ObjectItem[15];
@@ -120,7 +93,6 @@ public class MainActivity extends superActivity {
         list.setAdapter(adapter);
         list.setOnItemClickListener(new OnItemClickListenerListViewItem());
     }
-<<<<<<< HEAD
 
 	public void showPopUpB(double xco, double yco){
 		ObjectItem[] ObjectItemData = new ObjectItem[15];
@@ -180,8 +152,6 @@ public class MainActivity extends superActivity {
         list.setAdapter(adapter);
         list.setOnItemClickListener(new OnItemClickListenerListViewItem());        
     }
-=======
->>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
