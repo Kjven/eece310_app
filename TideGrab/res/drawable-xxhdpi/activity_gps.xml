@@ -23,4 +23,28 @@
         android:hint="Searching..." >
     </EditText>
     
+<<<<<<< HEAD:TideGrab/res/drawable-xxhdpi/activity_gps.xml
+=======
+    
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="Nearest City"
+         />
+
+    <EditText
+        android:id="@+id/nearest_city"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Not yet implemented" >
+    </EditText>
+
+    <Button
+        android:id="@+id/displayListView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="display list view" />
+    
+>>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d:TideGrab/res/layout/activity_gps.xml
 </LinearLayout>

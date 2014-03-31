@@ -8,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+<<<<<<< HEAD
 	tools:context=".MainActivity"
     android:focusable="true"
 	android:focusableInTouchMode="true" >
@@ -46,6 +47,41 @@
             android:text="Sort By Distance" />
 	</RelativeLayout>
     
+=======
+    tools:context=".MainActivity" 
+    android:background="@color/home_color" >
+    
+    <Button
+        android:id="@+id/gps_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/use_gps" 
+        android:background="@drawable/button_press" />
+    
+	<TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp"
+        android:text="@string/search_city"
+        android:textSize="16sp" />
+	
+    <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="0.5"
+    android:orientation="vertical" >
+
+        <ListView
+            android:id="@+id/listview2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" 
+            android:background="@drawable/listview_colors" >
+        </ListView>
+
+	</LinearLayout>
+	
+>>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
     <TextView
         android:id="@+id/textView2"
         android:layout_width="fill_parent"

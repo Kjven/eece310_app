@@ -3,6 +3,10 @@
     <color name="light_blue">#FF335555</color>
     <color name="yellow_orange">#FFFFCC00</color>
     <color name="white">#FFFFFFFF</color>
+<<<<<<< HEAD
     <color name="home_color">#FFa8a8bb</color>
     <color name="grey">#FF333333</color>
+=======
+    <color name="home_color">#FFa8a8a8</color>
+>>>>>>> 6dd959fcc4fb7ffe20516c693f29a6d2fd53d56d
 </resources>
