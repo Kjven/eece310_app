@@ -13,9 +13,13 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -26,6 +30,7 @@ public class Scraper {
 	
 	private String url;
 	private ProgressDialog mProgressDialog;
+	private ProgressDialog mProgressDialog2;
 	private TideApplication tideApp;
 	private GraphView graph;
 	
@@ -108,10 +113,26 @@ public class Scraper {
         	           }
             	}catch(IOException e){
             		Log.d("Gstorage", "Caught connect exception");
+            		
+            		tideApp.getActivity().runOnUiThread(new Runnable() {
+            		    public void run() {
+            		    	Toast.makeText(tideApp.getApplicationContext(), "No Internet Connection Available. Attempting to use Data Cache",
+                      			   Toast.LENGTH_LONG).show();	
+            		    }
+            		});
+            		
             		Calendar currentDate = new GregorianCalendar();
             		currentDate = Calendar.getInstance();
             		tideDataSet firstSet = tideApp.getStorage().findData(sid, currentDate);
-            		result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
+            		if(firstSet != null){
+            			tideApp.getActivity().runOnUiThread(new Runnable() {
+                		    public void run() {
+                		    	Toast.makeText(tideApp.getApplicationContext(), "Displaying Cached Data",
+                          			   Toast.LENGTH_LONG).show();	
+                		    }
+                		});
+            			result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
+            		}
             		
             	}
             	
@@ -121,7 +142,14 @@ public class Scraper {
 		@Override
         protected void onPostExecute(GraphViewSeries result) {
             mProgressDialog.dismiss();
-            updateTideGraph(result);
+            
+            if(result != null){
+            	updateTideGraph(result);
+            }else{
+            	//do something here
+            	Toast.makeText(tideApp.getApplicationContext(), "No Cached Data Available",
+            			   Toast.LENGTH_LONG).show();
+            }
         }
         
         //Extracts Height data from an HTML document, converts information into tideDataSet objects

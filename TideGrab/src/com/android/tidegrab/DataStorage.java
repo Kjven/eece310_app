@@ -95,16 +95,15 @@ public class DataStorage{
 		currentDate.clear(Calendar.MINUTE);
 		currentDate.clear(Calendar.SECOND);
 		currentDate.clear(Calendar.MILLISECOND);
-		//For debugging
-		currentDate.add(Calendar.DAY_OF_MONTH, 1);
 		tideDataSet returnSet = null;
 		for (tideDataSet DataSet : dataSetList){
 			if((DataSet.getDate().equals(currentDate)) && (DataSet.getTitle().equals(sid)) ){
 				Log.d("gStorage", "Data available in storage");
 				returnSet = new tideDataSet(DataSet.getData(), DataSet.getTitle(), DataSet.getDate());
+				return returnSet;
 			}
 		}
-		return returnSet;
+		return null;
 		
 	}
 	
