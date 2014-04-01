@@ -5,15 +5,21 @@ package com.android.tidegrab;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
@@ -24,6 +30,7 @@ public class Scraper {
 	
 	private String url;
 	private ProgressDialog mProgressDialog;
+	private ProgressDialog mProgressDialog2;
 	private TideApplication tideApp;
 	private GraphView graph;
 	
@@ -59,6 +66,7 @@ public class Scraper {
     public class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
         String info;
     	Elements rows;
+    	String sid;
 
         @Override
         protected void onPreExecute(){
@@ -75,34 +83,73 @@ public class Scraper {
         @Override
         protected GraphViewSeries doInBackground(String... params) {
         	GraphViewSeries result = null;
-            try {
+            
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
-            	Document doc = Jsoup.connect(url).get();           	
-            	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
-            	Log.d("Gbug", "Tide Heights extracted");
+            	sid = params[0];
+            	Document doc = null;
+            	try{
+            		doc = Jsoup.connect(url).get();
+            		try {
+                    	Log.d("Gstorage", "Jsoup connected");            	
+                    	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
+                    	Log.d("Gbug", "Tide Heights extracted");
+                    	
+                    	tideDataSet firstSet = tideDataSetList.get(0);
+                    	
+                    	for(tideDataSet Set : tideDataSetList){
+                     		Log.d("Internal Call", "Calling writeDataSet on: " + Set.getTitle());
+        	            	try {
+         						tideApp.getStorage().writeDataSet(new tideDataSet(Set.getData(), Set.getTitle(), Set.getDate()));
+         					}catch (ClassNotFoundException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					}
+                    	}
+                    	Log.d("Gbug", "Successfully Updated/Added internal memory");
+                    	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
+        	            }catch (IOException e) {
+        	                e.printStackTrace();
+        	           }
+            	}catch(IOException e){
+            		Log.d("Gstorage", "Caught connect exception");
+            		
+            		tideApp.getActivity().runOnUiThread(new Runnable() {
+            		    public void run() {
+            		    	Toast.makeText(tideApp.getApplicationContext(), "No Internet Connection Available. Attempting to use Data Cache",
+                      			   Toast.LENGTH_LONG).show();	
+            		    }
+            		});
+            		
+            		Calendar currentDate = new GregorianCalendar();
+            		currentDate = Calendar.getInstance();
+            		tideDataSet firstSet = tideApp.getStorage().findData(sid, currentDate);
+            		if(firstSet != null){
+            			tideApp.getActivity().runOnUiThread(new Runnable() {
+                		    public void run() {
+                		    	Toast.makeText(tideApp.getApplicationContext(), "Displaying Cached Data",
+                          			   Toast.LENGTH_LONG).show();	
+                		    }
+                		});
+            			result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
+            		}
+            		
+            	}
             	
-            	tideDataSet firstSet = tideDataSetList.get(0);
-            	
-            	//Must check internal memory for this data, and add/update it accordingly
-            	try {
-					tideApp.getStorage().writeDataSet(new tideDataSet(firstSet.getData(), firstSet.getTitle(), firstSet.getDate()));
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            	Log.d("Gbug", "Successfully Updated/Added internal memory");
-            	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             return result;
         }
 
 		@Override
         protected void onPostExecute(GraphViewSeries result) {
             mProgressDialog.dismiss();
-            updateTideGraph(result);
+            
+            if(result != null){
+            	updateTideGraph(result);
+            }else{
+            	//do something here
+            	Toast.makeText(tideApp.getApplicationContext(), "No Cached Data Available",
+            			   Toast.LENGTH_LONG).show();
+            }
         }
         
         //Extracts Height data from an HTML document, converts information into tideDataSet objects
@@ -147,8 +194,8 @@ public class Scraper {
                 		info += "\n";
                     	Log.d("Gbug", "Entering tideDataList element");
                     	
-                    	String stationTitle = extractStationName(doc);
-                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new TideGraphView.GraphViewData[tideData.size()]), stationTitle, dataDate);
+                    	//String stationTitle = extractStationName(doc);
+                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new TideGraphView.GraphViewData[tideData.size()]), sid, dataDate);
                     	tideDataSetList.add(currentSet);
                     	Log.d("Gbug", "Entered tideDataSetList element");
                     	tideData.clear();
