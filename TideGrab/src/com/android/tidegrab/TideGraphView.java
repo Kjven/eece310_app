@@ -12,17 +12,17 @@ public class TideGraphView extends LineGraphView {
 
 	public TideGraphView(Context context, String title){
 	    super(context, title);
+	    //Set windowing
+        setViewPort(0, 2);
+        setScrollable(true);
+        setScalable(true);
     }
 	
 	
 	public void UpdateGraph(final GraphViewSeries series){
 		removeAllSeries();
         addSeries(series);
-        
-        //Set windowing
-        setViewPort(25, 25);
-        setScrollable(true);
-        setScalable(true);
+        super.invalidate();        
 	}
 	
 	static public class GraphViewData implements GraphViewDataInterface, Serializable {

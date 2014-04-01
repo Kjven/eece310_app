@@ -12,27 +12,15 @@ import com.jjoe64.graphview.GraphView;
 public class GraphActivity extends superActivity {
 	private String sid = null;
 	Scraper tideScrape;
-	GraphView graph;
+	TideGraphView graph;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_graph);
-		
-		//set up the back button in the action bar
-		//getActionBar().setDisplayHomeAsUpEnabled(true);
          
 		//Create the graph
         graph = new TideGraphView(this, "Tide Heights");
-        graph.setCustomLabelFormatter(new CustomLabelFormatter() {
-        	   @Override
-        	   public String formatLabel(double value, boolean isValueX) {
-        	      if (!isValueX) {
-        	         return String.valueOf(Math.round(value));
-        	      }
-        	      return null; // let graphview generate X-axis label for us
-        	   }
-        	});
         ((LinearLayout) findViewById(R.id.graph1)).addView(graph);
 		
         Intent intent = getIntent();
