@@ -5,21 +5,19 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 
 
 public class GraphActivity extends superActivity {
 	private String sid = null;
 	Scraper tideScrape;
-	GraphView graph;
+	TideGraphView graph;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_graph);
-		
-		//set up the back button in the action bar
-		//getActionBar().setDisplayHomeAsUpEnabled(true);
          
 		//Create the graph
         graph = new TideGraphView(this, "Tide Heights");
