@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import android.content.Context;
 
+import com.jjoe64.graphview.CustomLabelFormatter;
 import com.jjoe64.graphview.GraphViewDataInterface;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
@@ -12,11 +13,25 @@ public class TideGraphView extends LineGraphView {
 
 	public TideGraphView(Context context, String title){
 	    super(context, title);
+	    
 	    //Set windowing
-        setViewPort(0, 2);
         setScrollable(true);
         setScalable(true);
+        setCustomLabelFormatter(makeCustomLabelFormatter());
+        getGraphViewStyle().setNumVerticalLabels(6);
+        setManualYAxisBounds(5, 0);
     }
+	
+	private CustomLabelFormatter makeCustomLabelFormatter()
+	{
+		return new CustomLabelFormatter() 
+		{
+			@Override
+            public String formatLabel(double value, boolean isValueX) {
+	            	return String.valueOf(Math.floor(value));
+            }
+		};
+	}
 	
 	
 	public void UpdateGraph(final GraphViewSeries series){
