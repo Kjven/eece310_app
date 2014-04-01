@@ -14,26 +14,26 @@ public class tideDataSet implements Serializable {
 	
 	private static final long serialVersionUID = -8629703701445663529L;
 	private TideGraphView.GraphViewData[] graphData;
-	private String stationTitle;
+	private String sid;
 	private Calendar dataDate; //
 	
-	public tideDataSet(TideGraphView.GraphViewData[] graphViewData, String title, String date){
+	public tideDataSet(TideGraphView.GraphViewData[] graphViewData, String sid, String date){
 		Log.d("tideData", "Entered tideDataSet constructor");
 		
 		dataDate = new GregorianCalendar();
 		
 		setgraphData(graphViewData);
-		setstationTitle(title);
+		setsid(sid);
 		setDate(date);
 	}
 	
-	public tideDataSet(TideGraphView.GraphViewData[] graphViewData, String title, Calendar date){
+	public tideDataSet(TideGraphView.GraphViewData[] graphViewData, String sid, Calendar date){
 		Log.d("tideData", "Entered tideDataSet constructor");
 		
 		dataDate = new GregorianCalendar();
 		
 		setgraphData(graphViewData);
-		setstationTitle(title);
+		setsid(sid);
 		
 		dataDate = (Calendar) date.clone();
 		
@@ -44,7 +44,7 @@ public class tideDataSet implements Serializable {
 	}
 	
 	public String getTitle(){
-		return new String(stationTitle);
+		return new String(sid);
 	}
 	
 	public Calendar getDate(){
@@ -73,9 +73,9 @@ public class tideDataSet implements Serializable {
 
 	}
 	
-	public void setstationTitle(String title){
+	public void setsid(String sid){
 		Log.d("tideData", "tideDataSet: setstationTitle entered");
-		this.stationTitle = title;
+		this.sid = sid;
 		Log.d("tideData", "tideDataSet: setGraphData exited");
 
 	}

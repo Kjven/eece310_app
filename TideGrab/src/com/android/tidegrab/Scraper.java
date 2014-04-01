@@ -59,6 +59,7 @@ public class Scraper {
     public class TideInfo extends AsyncTask<String, Void, GraphViewSeries>{
         String info;
     	Elements rows;
+    	String sid;
 
         @Override
         protected void onPreExecute(){
@@ -78,7 +79,19 @@ public class Scraper {
             try {
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
-            	Document doc = Jsoup.connect(url).get();           	
+            	sid = params[0];
+            	Document doc = null;
+            	try{
+            		doc = Jsoup.connect(url).get();
+            	}catch(IOException e){
+            		Log.d("Gstorage", "Caught connect exception");
+            	}
+            	Log.d("Gstorage", "Jsoup connected");
+            	if(doc == null){
+            		Log.d("Gstorage", "Document is null");
+            	}else{
+            		Log.d("Gstorage", "Document is not null");
+            	}
             	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
             	Log.d("Gbug", "Tide Heights extracted");
             	
@@ -149,8 +162,8 @@ public class Scraper {
                 		info += "\n";
                     	Log.d("Gbug", "Entering tideDataList element");
                     	
-                    	String stationTitle = extractStationName(doc);
-                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new TideGraphView.GraphViewData[tideData.size()]), stationTitle, dataDate);
+                    	//String stationTitle = extractStationName(doc);
+                    	tideDataSet currentSet = new tideDataSet(tideData.toArray(new TideGraphView.GraphViewData[tideData.size()]), sid, dataDate);
                     	tideDataSetList.add(currentSet);
                     	Log.d("Gbug", "Entered tideDataSetList element");
                     	tideData.clear();
