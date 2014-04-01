@@ -5,6 +5,8 @@ package com.android.tidegrab;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -76,41 +78,43 @@ public class Scraper {
         @Override
         protected GraphViewSeries doInBackground(String... params) {
         	GraphViewSeries result = null;
-            try {
+            
             	Log.d("Gbug", "GraphView doInBackground started");
             	url = "http://www.waterlevels.gc.ca/eng/station?sid=" + params[0];
             	sid = params[0];
             	Document doc = null;
             	try{
             		doc = Jsoup.connect(url).get();
+            		try {
+                    	Log.d("Gstorage", "Jsoup connected");            	
+                    	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
+                    	Log.d("Gbug", "Tide Heights extracted");
+                    	
+                    	tideDataSet firstSet = tideDataSetList.get(0);
+                    	
+                    	for(tideDataSet Set : tideDataSetList){
+                     		Log.d("Internal Call", "Calling writeDataSet on: " + Set.getTitle());
+        	            	try {
+         						tideApp.getStorage().writeDataSet(new tideDataSet(Set.getData(), Set.getTitle(), Set.getDate()));
+         					}catch (ClassNotFoundException e) {
+         						// TODO Auto-generated catch block
+         						e.printStackTrace();
+         					}
+                    	}
+                    	Log.d("Gbug", "Successfully Updated/Added internal memory");
+                    	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
+        	            }catch (IOException e) {
+        	                e.printStackTrace();
+        	           }
             	}catch(IOException e){
             		Log.d("Gstorage", "Caught connect exception");
+            		Calendar currentDate = new GregorianCalendar();
+            		currentDate = Calendar.getInstance();
+            		tideDataSet firstSet = tideApp.getStorage().findData(sid, currentDate);
+            		result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
+            		
             	}
-            	Log.d("Gstorage", "Jsoup connected");
-            	if(doc == null){
-            		Log.d("Gstorage", "Document is null");
-            	}else{
-            		Log.d("Gstorage", "Document is not null");
-            	}
-            	ArrayList<tideDataSet> tideDataSetList = extractTideHeight(doc);
-            	Log.d("Gbug", "Tide Heights extracted");
             	
-            	tideDataSet firstSet = tideDataSetList.get(0);
-            	
-            	for(tideDataSet Set : tideDataSetList){
-             		Log.d("Internal Call", "Calling writeDataSet on: " + Set.getTitle());
-	            	try {
- 						tideApp.getStorage().writeDataSet(new tideDataSet(Set.getData(), Set.getTitle(), Set.getDate()));
- 					} catch (ClassNotFoundException e) {
- 						// TODO Auto-generated catch block
- 						e.printStackTrace();
- 					}
-            	}
-            	Log.d("Gbug", "Successfully Updated/Added internal memory");
-            	result = new GraphViewSeries(firstSet.getTitle(), null, firstSet.getData());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             return result;
         }
 

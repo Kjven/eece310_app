@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 
 
 import android.content.Context;
@@ -85,6 +86,26 @@ public class DataStorage{
 		out.close();
 		fileout.close();
 		Log.d("DataStorage", "Exited writeStorage");
+	}
+	
+	public tideDataSet findData(String sid, Calendar currentDate){
+		//Iterating through the cached data
+		Log.d("gStorage", "Looking for data in storage");
+		currentDate.clear(Calendar.HOUR);
+		currentDate.clear(Calendar.MINUTE);
+		currentDate.clear(Calendar.SECOND);
+		currentDate.clear(Calendar.MILLISECOND);
+		//For debugging
+		currentDate.add(Calendar.DAY_OF_MONTH, 1);
+		tideDataSet returnSet = null;
+		for (tideDataSet DataSet : dataSetList){
+			if((DataSet.getDate().equals(currentDate)) && (DataSet.getTitle().equals(sid)) ){
+				Log.d("gStorage", "Data available in storage");
+				returnSet = new tideDataSet(DataSet.getData(), DataSet.getTitle(), DataSet.getDate());
+			}
+		}
+		return returnSet;
+		
 	}
 	
 }
